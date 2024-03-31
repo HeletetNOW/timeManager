@@ -1,0 +1,39 @@
+.form {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  height: 50px;
+}
+
+.input {
+  width: 100%;
+  border: 0;
+}
+
+.input:focus {
+  outline: none;
+}
+
+.button {
+  background-color: white;
+  cursor: pointer;
+  border: 0;
+  width: 50px;
+}
+
+.input::placeholder {
+  color: #878282;
+}
+
+.input {
+  font-size: 18px;
+}
+
+.button:hover {
+  outline: none;
+}
+
+.button img {
+  height: 100%;
+  width: 100%;
+}

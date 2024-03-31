@@ -1,0 +1,65 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING") 
+}
+
+model User {
+  id       Int @id @default(autoincrement())
+  email    String
+  password String
+  name     String
+  surname  String
+  tags     Tag[]
+  projects Project[]
+  timers   Timer[]
+}
+
+model Timer {
+  id            Int @id @default(autoincrement())
+  authorId      Int
+  author        User @relation(fields: [authorId], references: [id])
+  timerName     String
+  tags          Tag[]
+  projects      Project[]
+  startTime     DateTime
+  pauseTimer    Boolean
+  sumTime       Int
+  addTimer      DateTime
+}
+
+model Project{
+  id          Int @id @default(autoincrement())
+  authorId    Int
+  status      Boolean
+  author      User @relation(fields: [authorId], references: [id])
+  tags        Tag[]
+  timers      Timer[]
+  subProjects  SubProject[] 
+  projectName String
+  description String
+
+}
+
+model SubProject{
+  id          Int @id @default(autoincrement())
+  status      Boolean
+  subProjectName String
+  description String
+  projectId   Int
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade )
+}
+
+model Tag {
+  id        Int @id @default(autoincrement())
+  authorId  Int
+  author    User @relation(fields: [authorId], references: [id])
+  projects  Project[]
+  timers    Timer[]
+  tagName  String
+}

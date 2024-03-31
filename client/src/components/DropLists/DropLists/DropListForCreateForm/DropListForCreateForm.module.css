@@ -1,0 +1,45 @@
+.button {
+  border: 0;
+  cursor: pointer;
+  height: 30px;
+  background-color: white;
+  display: flex;
+  align-items: center;
+}
+
+.triangle {
+  width: 12%;
+  margin-left: 4px;
+}
+
+.main {
+  padding: 10px 20px;
+  display: block;
+  position: absolute;
+  top: 200%;
+  right: 50%;
+  transform: translate(50%, 0%);
+  z-index: 100;
+  background-color: white;
+  border: 3px solid #d9d9d9;
+  border-radius: 30px;
+}
+
+.projects {
+  padding: 5px;
+  overflow-y: auto;
+  max-height: 100px;
+}
+.container {
+  position: relative;
+}
+
+.icons {
+  width: 30px;
+}
+
+@media (max-width: 1000px) {
+  .main {
+    right: 100%;
+  }
+}

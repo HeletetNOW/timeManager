@@ -1,0 +1,56 @@
+.item {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  border: 2px solid #d9d9d9;
+  padding: 10px;
+  border-radius: 20px;
+}
+
+.title,
+.desc {
+  position: relative;
+  font-size: 15px;
+  padding: 0 10px;
+}
+
+.title::before {
+  margin-right: 10px;
+  content: "";
+  position: absolute;
+  background-color: #d9d9d9;
+  height: 20px;
+  width: 3px;
+  right: -10px;
+}
+
+.status {
+  margin: 0 10px;
+}
+
+.buttons {
+  margin-left: auto;
+}
+
+.complete {
+  color: green;
+}
+
+.noComplete {
+  color: red;
+}
+
+.content {
+  display: flex;
+}
+
+@media (max-width: 600px) {
+  .status,
+  .title {
+    font-size: 14px;
+  }
+  .deleteButton,
+  .desc {
+    display: none;
+  }
+}

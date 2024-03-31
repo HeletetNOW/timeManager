@@ -1,0 +1,21 @@
+.items {
+  width: 94%;
+}
+
+.list {
+  display: flex;
+  justify-content: center;
+}
+
+.subProjectsContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.subProjects {
+  width: 90%;
+}
+
+.isFetching {
+  pointer-events: none;
+}

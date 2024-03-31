@@ -1,0 +1,67 @@
+.createForm {
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+}
+.container {
+  padding: 0px 20px;
+  width: 1400px;
+  height: 70px;
+  border: 3px solid #d9d9d9;
+  border-radius: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+}
+
+.container div button {
+  font-size: 18px;
+}
+
+.input {
+  width: 70%;
+}
+
+.input input {
+  font-size: 18px;
+  border: 0;
+  outline: none;
+  height: 100%;
+  width: 100%;
+}
+
+.button {
+  background: linear-gradient(45deg, #64719c, #2cc5e1) no-repeat;
+  background-color: #64719c;
+  transition: all linear 0.3s;
+  border-radius: 30px;
+  border: 0;
+  cursor: pointer;
+  color: white;
+  font-weight: 500;
+  font-size: 20px;
+  height: 40px;
+  width: 200px;
+  margin-left: 10px;
+}
+
+.button:hover {
+  background-position: 200px;
+}
+
+@media (max-width: 1000px) {
+  .input input {
+    font-size: 12px;
+  }
+
+  .button {
+    width: 100px;
+    height: 30px;
+    font-size: 10px;
+  }
+}

@@ -1,0 +1,86 @@
+.container {
+  display: flex;
+  margin: 10px;
+  padding: 14px;
+  border: 3px solid #d9d9d9;
+  border-radius: 30px;
+}
+
+.item {
+  background-color: white;
+  position: relative;
+  padding: 0px 10px;
+  border: 0;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.item:before,
+.projects::before {
+  z-index: 10;
+  content: "";
+  width: 3px;
+  height: 100%;
+  background-color: #d9d9d9;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.title {
+  text-align: center;
+  display: flex;
+  align-items: center;
+}
+
+.actionButtons {
+  display: flex;
+}
+
+.deleteButton {
+  background-color: white;
+  cursor: pointer;
+  padding: 0px 10px;
+  border: 0;
+}
+
+.cancelButton {
+  background-color: white;
+  cursor: pointer;
+  padding: 0px 10px;
+  border: 0;
+}
+
+.projects {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 30px;
+  width: 86px;
+}
+
+.textarea {
+  display: flex;
+  align-items: center;
+  display: inline-block;
+  height: 20px;
+  resize: none;
+  max-width: 100px;
+}
+
+.input {
+  padding: 0;
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  border: 0;
+  outline: none;
+}
+
+@media (max-width: 1000px) {
+  .projects {
+    width: 40px;
+  }
+}

@@ -1,0 +1,83 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+  width: 91%;
+  border: 3px solid #01d8dd;
+  border-radius: 30px;
+}
+
+.selectData div button {
+  font-size: 20px;
+  position: relative;
+}
+
+.container div button img {
+  width: 14px;
+}
+
+.input {
+  margin-left: 20px;
+  font-size: 18px;
+  border: 0;
+  width: 100%;
+}
+
+.selectData {
+  padding-right: 20px;
+  align-items: center;
+  display: flex;
+}
+
+.selectData div button img {
+  width: 18px;
+}
+
+.input:focus {
+  outline: none;
+}
+
+.createTimer {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 20px;
+  border: 0;
+  background: linear-gradient(270deg, #64719c, #2cc5e1) no-repeat;
+  background-color: #2cc5e1;
+  color: white;
+  width: 200px;
+  height: 40px;
+  border-radius: 30px;
+  transition: all linear 0.3s;
+}
+
+.createTimer:hover {
+  background-position: 300px;
+}
+
+@media (max-width: 1000px) {
+  .selectData div button {
+    font-size: 16px;
+  }
+
+  .selectData div button img {
+    margin: 0 5px;
+    width: 30px;
+  }
+  .input {
+    font-size: 14px;
+  }
+  .createTimer {
+    width: 140px;
+    font-size: 16px;
+    height: 30px;
+  }
+}
+
+@media (max-width: 600px) {
+  .createTimer {
+    font-size: 14px;
+    width: 110px;
+  }
+}

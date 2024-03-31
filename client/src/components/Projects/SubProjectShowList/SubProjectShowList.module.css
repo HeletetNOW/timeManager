@@ -1,0 +1,19 @@
+.subProject {
+  text-wrap: nowrap;
+  border: 0;
+  background-color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.subProject img {
+  margin-left: 4px;
+}
+
+.isFetching {
+  pointer-events: none;
+}
+
+.icons {
+  width: 30px;
+}

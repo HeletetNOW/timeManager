@@ -1,0 +1,20 @@
+.projects {
+  width: 86%;
+}
+
+.projectsContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.loader {
+  font-size: 13px;
+}
+
+.projectList {
+  width: 100%;
+}
+
+.isFetching {
+  pointer-events: none;
+}

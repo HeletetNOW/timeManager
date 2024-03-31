@@ -1,0 +1,19 @@
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 1400px;
+}
+
+.tagsContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.loader {
+  font-size: 15px;
+}
+
+.isFetching {
+  pointer-events: none;
+}
