@@ -18,6 +18,7 @@ const getTimers = async (req, res) => {
           lt: nextDay,
         },
       },
+
       orderBy: {
         timerName: "desc",
       },
