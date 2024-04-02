@@ -1,3 +1,3 @@
-const baseURL = "http://151.248.112.17:8000/api";
+const baseURL = "http://timel.space/api";
 
 export default baseURL;
