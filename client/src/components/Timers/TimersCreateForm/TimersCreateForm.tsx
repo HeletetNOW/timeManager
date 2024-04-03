@@ -19,6 +19,7 @@ export const TimersCreateForm = () => {
 
   const handlerCreateTimer = () => {
     dispatch(createTimer(timerName, selectedProjects, selectedTags));
+    setTimerName("");
   };
 
   const handlerSetShowTags = (value: boolean) => {
@@ -40,20 +41,24 @@ export const TimersCreateForm = () => {
         onChange={(value) => setTimerName(value.target.value)}
       />
       <div className={Style.selectData}>
-        <DropListForCreateForm
-          dataType="projects"
-          selectedDate={selectedProjects}
-          setSelectedDate={setSelectedProjects}
-          isShow={isShowTags ? false : isShowProjects}
-          setShow={handlerSetShowProjects}
-        />
-        <DropListForCreateForm
-          dataType="tags"
-          selectedDate={selectedTags}
-          setSelectedDate={setSelectedTags}
-          isShow={isShowProjects ? false : isShowTags}
-          setShow={handlerSetShowTags}
-        />
+        <div className={Style.projects}>
+          <DropListForCreateForm
+            dataType="projects"
+            selectedDate={selectedProjects}
+            setSelectedDate={setSelectedProjects}
+            isShow={isShowTags ? false : isShowProjects}
+            setShow={handlerSetShowProjects}
+          />
+        </div>
+        <div className={Style.tags}>
+          <DropListForCreateForm
+            dataType="tags"
+            selectedDate={selectedTags}
+            setSelectedDate={setSelectedTags}
+            isShow={isShowProjects ? false : isShowTags}
+            setShow={handlerSetShowTags}
+          />
+        </div>
         <button className={Style.createTimer} onClick={handlerCreateTimer}>
           Добавить
         </button>

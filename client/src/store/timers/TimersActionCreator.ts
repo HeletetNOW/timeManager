@@ -43,6 +43,21 @@ export const createTimer =
     }
   };
 
+export const deleteTimer = (id: number) => async (dispatch: AppDispatch) => {
+  try {
+    const result = await timersAPI.deleteTimer(id);
+
+    dispatch(getTimers(new Date().getTime()));
+    return result;
+  } catch (error: any) {
+    console.log(error.response.data.message);
+    dispatch(
+      timersSlice.actions.timersFetchingError(error.response?.data?.message)
+    );
+    return error.response.status;
+  }
+};
+
 export const controlTimer =
   (timerId: number, action: "start" | "stop") =>
   async (dispatch: AppDispatch, getStore: () => RootState) => {

@@ -1,6 +1,8 @@
 import Style from "./DropListForItem.module.css";
-import triangleDown from "../../../../imgs/triangleDown.svg";
-import triangleUp from "../../../../imgs/triangleUp.svg";
+
+import tagIcon from "../../../../imgs/tag.svg";
+import projectIcon from "../../../../imgs/project.svg";
+
 import { projectType, tagType } from "../../../../types/types";
 import { DropElement } from "../../DropElement/DropElement";
 
@@ -28,15 +30,12 @@ export const DropListForItem = ({
   let emptyDataPlaceholder = "";
 
   let inputPlaceholder = "Введите название ";
-  let title = "";
   if (dataType === "projects") {
     emptyDataPlaceholder = "Проектов пока нет";
     inputPlaceholder += "проекта";
-    title = "Проекты";
   } else if (dataType === "tags") {
     emptyDataPlaceholder = "Тегов пока нет";
     inputPlaceholder += "тега";
-    title = "Теги";
   }
 
   return (
@@ -45,10 +44,9 @@ export const DropListForItem = ({
         className={Style.button}
         onClick={() => handlerGetData(dataId, isShow)}
       >
-        {title}
         <img
-          className={Style.triangle}
-          src={isShow ? triangleUp : triangleDown}
+          className={Style.icon}
+          src={dataType === "projects" ? projectIcon : tagIcon}
           alt=""
         />
       </button>

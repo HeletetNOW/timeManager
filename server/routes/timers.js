@@ -7,6 +7,13 @@ const checkAuth = require("../middleware/checkAuth.js");
 router.post("/add", checkAuth, require("../controllers/timers/createTimer.js"));
 
 //Get timers
+router.delete(
+  "/delete/:id",
+  checkAuth,
+  require("../controllers/timers/deleteTimer.js")
+);
+
+//Get timers
 router.post("/", checkAuth, require("../controllers/timers/getTimers.js"));
 
 //Start timer

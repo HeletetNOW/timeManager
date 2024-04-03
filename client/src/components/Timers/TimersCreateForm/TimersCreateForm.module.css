@@ -8,15 +8,6 @@
   border-radius: 30px;
 }
 
-.selectData div button {
-  font-size: 20px;
-  position: relative;
-}
-
-.container div button img {
-  width: 14px;
-}
-
 .input {
   margin-left: 20px;
   font-size: 18px;
@@ -24,14 +15,15 @@
   width: 100%;
 }
 
+.projects,
+.tags {
+  margin-right: 10px;
+}
+
 .selectData {
   padding-right: 20px;
   align-items: center;
   display: flex;
-}
-
-.selectData div button img {
-  width: 14px;
 }
 
 .input:focus {

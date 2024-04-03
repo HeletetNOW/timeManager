@@ -6,9 +6,8 @@
   text-wrap: nowrap;
 }
 
-.triangle {
-  width: 12px;
-  margin-left: 4px;
+.icon {
+  width: 30px;
 }
 
 .main {
@@ -31,10 +30,6 @@
 }
 .container {
   position: relative;
-}
-
-.icons {
-  width: 30px;
 }
 
 .emptyData {

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import {
   controlTimer,
+  deleteTimer,
   getDataBySelected,
   setDataToTimer,
 } from "../../../store/timers/TimersActionCreator";
@@ -100,6 +101,12 @@ export const TimersList = ({ timers }: Props) => {
     );
   };
 
+  const handlerDeleteTimer = (timerId: number) => {
+    setFetching(true);
+    dispatch(deleteTimer(timerId));
+    setFetching(false);
+  };
+
   return (
     <div className={Style.container}>
       {timers.length > 0 ? (
@@ -111,6 +118,7 @@ export const TimersList = ({ timers }: Props) => {
               aria-disabled={isFetching}
             >
               <TimersItem
+                handlerDeleteTimer={handlerDeleteTimer}
                 timerControl={handlerControlTimer}
                 timerId={timer.id}
                 pauseTimer={timer.pauseTimer}

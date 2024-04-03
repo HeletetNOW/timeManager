@@ -1,7 +1,8 @@
 import Style from "./DropListForCreateForm.module.css";
 
-import triangleUp from "../../../../imgs/triangleUp.svg";
-import triangleDown from "../../../../imgs/triangleDown.svg";
+import tagIcon from "../../../../imgs/tag.svg";
+import projectIcon from "../../../../imgs/project.svg";
+
 import { useCallback, useState } from "react";
 import { projectType, tagType } from "../../../../types/types";
 import { useAppDispatch } from "../../../../hooks/hooks";
@@ -102,24 +103,20 @@ export const DropListForCreateForm = ({
   let emptyDataPlaceholder = "";
 
   let inputPlaceholder = "Введите название ";
-  let title = "";
   if (dataType === "projects") {
     emptyDataPlaceholder = "Проектов пока нет";
     inputPlaceholder += "проекта";
-    title = "Проекты";
   } else if (dataType === "tags") {
     emptyDataPlaceholder = "Тегов пока нет";
     inputPlaceholder += "тега";
-    title = "Теги";
   }
 
   return (
     <div className={Style.container}>
       <button className={Style.button} onClick={handlerGetDate}>
-        {title}
         <img
-          className={Style.triangle}
-          src={isShow ? triangleUp : triangleDown}
+          className={Style.icon}
+          src={dataType === "projects" ? projectIcon : tagIcon}
           alt=""
         />
       </button>

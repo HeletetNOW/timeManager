@@ -1,13 +1,16 @@
 .container {
+  border: 3px solid #d9d9d9;
+  border-radius: 30px;
   padding: 0 20px;
   align-items: center;
-  width: 100%;
+  width: 1400px;
   display: flex;
   justify-content: space-between;
 }
 
 .actions {
   align-items: center;
+  flex-wrap: wrap;
   display: flex;
 }
 
@@ -15,32 +18,40 @@
   font-size: 20px;
 }
 
-.info {
-  display: flex;
-}
-
-.buttonControl {
+.buttonControl img {
   cursor: pointer;
   width: 30px;
   height: 30px;
 }
 
-.projectsList {
+.changeNameButton,
+.deleteButton {
+  border: 0;
+  background: none;
+}
+
+.delete,
+.changeName {
+  cursor: pointer;
+}
+
+.projectsList,
+.tagsList,
+.buttonControl,
+.changeNameButton,
+.deleteButton {
+  display: flex;
+  align-items: center;
   cursor: pointer;
   position: relative;
-  width: 160px;
   padding: 0 20px;
-  margin: 0 20px;
 }
 
-.tagsList {
-  cursor: pointer;
-  user-select: none;
-  width: 80px;
-}
-
-.projectsList::after,
-.projectsList::before {
+.buttonControl::before,
+.projectsList::before,
+.tagsList::before,
+.changeNameButton::before {
+  right: 0;
   transform: translate(50%, -50%);
   top: 50%;
   position: absolute;
@@ -48,14 +59,6 @@
   background-color: #d9d9d9;
   width: 4px;
   height: 40px;
-}
-
-.projectsList::after {
-  left: 0;
-}
-
-.projectsList::before {
-  right: 0;
 }
 
 .title {
@@ -69,28 +72,52 @@
   font-size: 20px;
   width: 110px;
 }
+.info {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 1500px) {
+  .container {
+    width: 1000px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .container {
+    width: 800px;
+  }
+}
 
 @media (max-width: 1000px) {
-  .projectsList::after,
-  .projectsList::before {
+  .buttonControl::before,
+  .projectsList::before,
+  .tagsList::before,
+  .changeNameButton::before {
     display: none;
   }
-  .projectsList {
-    width: 100%;
-    padding: 0;
-    margin: 0;
+
+  .buttonControl,
+  .projectsList,
+  .tagsList,
+  .changeNameButton {
+    padding: 0 10px;
   }
 
-  .buttonControl {
-    margin: 0 10px;
+  .container {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .info {
+    width: 100%;
   }
 
   .title {
     font-size: 16px;
-  }
-
-  .tagsList {
-    width: 100%;
   }
 
   .projectsList div button img {

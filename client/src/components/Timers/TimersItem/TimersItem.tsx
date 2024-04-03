@@ -9,6 +9,7 @@ import startTimerIcon from "../../../imgs/startTimer.svg";
 
 type Props = {
   timerControl: (timerId: number, action: "start" | "stop") => void;
+  handlerDeleteTimer: (id: number) => void;
   timerId: number;
   pauseTimer: boolean;
   projects: projectType[];
@@ -26,6 +27,7 @@ export const TimersItem = ({
   timerControl,
   projectsList,
   tagsList,
+  handlerDeleteTimer,
 }: Props) => {
   const [currentTime, setCurrentTime] = useState(sumTime);
 
@@ -65,22 +67,29 @@ export const TimersItem = ({
       </div>
       <div className={Style.actions}>
         {pauseTimer ? (
-          <img
-            alt=""
-            className={Style.buttonControl}
-            src={startTimerIcon}
-            onClick={handlerStartTimer}
-          />
+          <div onClick={handlerStartTimer} className={Style.buttonControl}>
+            <img alt="" src={startTimerIcon} />
+          </div>
         ) : (
-          <img
-            alt=""
-            className={Style.buttonControl}
-            src={pauseTimerIcon}
-            onClick={handlerStopTimer}
-          />
+          <div onClick={handlerStopTimer} className={Style.buttonControl}>
+            <img alt="" src={pauseTimerIcon} />
+          </div>
         )}
         <div className={Style.projectsList}>{projectsList}</div>
         <div className={Style.tagsList}>{tagsList}</div>
+        <div className={Style.changeName}>
+          <button className={`${Style.title} ${Style.changeNameButton}`}>
+            Изменить
+          </button>
+        </div>
+        <div className={Style.delete}>
+          <button
+            onClick={() => handlerDeleteTimer(timerId)}
+            className={`${Style.title} ${Style.deleteButton}`}
+          >
+            Удалить
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -12,6 +12,9 @@ export const timersAPI = {
   ): Promise<AxiosResponse> {
     return instance.post("/timers/add", { timerName, projects, tags });
   },
+  async deleteTimer(id: number): Promise<AxiosResponse> {
+    return instance.delete(`/timers/delete/${id}`);
+  },
   async startTimer(id: number): Promise<AxiosResponse> {
     return instance.post(`/timers/control/start/${id}`);
   },
