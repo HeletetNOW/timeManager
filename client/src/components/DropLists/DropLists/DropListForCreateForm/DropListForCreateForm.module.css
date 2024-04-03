@@ -38,6 +38,12 @@
   width: 30px;
 }
 
+.emptyData {
+  user-select: none;
+  cursor: auto;
+  padding: 10px 0;
+}
+
 @media (max-width: 1000px) {
   .main {
     right: 100%;

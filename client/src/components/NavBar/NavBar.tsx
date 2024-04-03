@@ -16,9 +16,10 @@ const navItems = [
 
 type Props = {
   burgerForm: boolean;
+  setBurgerForm: () => void;
 };
 
-export const NavBar = ({ burgerForm }: Props) => {
+export const NavBar = ({ burgerForm, setBurgerForm }: Props) => {
   const location = useLocation();
 
   return (
@@ -35,6 +36,7 @@ export const NavBar = ({ burgerForm }: Props) => {
           className={`${Style.item} ${
             location.pathname === item.path ? Style.active : ""
           }`}
+          onClick={setBurgerForm}
         >
           <div
             className={`${Style.link} ${

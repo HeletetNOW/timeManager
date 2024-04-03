@@ -59,12 +59,15 @@
 }
 
 .title {
+  display: flex;
+  align-items: center;
   font-size: 20px;
 }
 
 .count {
   padding: 0 10px;
   font-size: 20px;
+  width: 110px;
 }
 
 @media (max-width: 1000px) {

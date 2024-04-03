@@ -7,7 +7,7 @@
 }
 
 .triangle {
-  width: 12%;
+  width: 12px;
   margin-left: 4px;
 }
 
@@ -35,6 +35,12 @@
 
 .icons {
   width: 30px;
+}
+
+.emptyData {
+  user-select: none;
+  cursor: auto;
+  padding: 10px 0;
 }
 
 @media (max-width: 1000px) {

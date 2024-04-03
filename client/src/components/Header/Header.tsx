@@ -18,6 +18,8 @@ export const Header = ({ children }: Props) => {
     ? `${Style.burger} ${Style.burger_active}`
     : `${Style.burger}`;
 
+  const windowWidth = window.innerWidth;
+
   const logoutButton = async () => {
     await authAPI.logout();
     dispatch(currentAuth());
@@ -38,7 +40,12 @@ export const Header = ({ children }: Props) => {
         </div>
       </div>
       <div className={Style.main}>
-        <NavBar burgerForm={burgerForm} />
+        <NavBar
+          burgerForm={burgerForm}
+          setBurgerForm={
+            windowWidth > 1000 ? () => {} : () => setBurgerForm(false)
+          }
+        />
         <div className={Style.children}>{children}</div>
       </div>
     </div>

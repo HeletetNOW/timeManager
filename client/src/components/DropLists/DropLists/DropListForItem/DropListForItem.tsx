@@ -4,9 +4,6 @@ import triangleUp from "../../../../imgs/triangleUp.svg";
 import { projectType, tagType } from "../../../../types/types";
 import { DropElement } from "../../DropElement/DropElement";
 
-import tagIcon from "../../../../imgs/tag.svg";
-import projectIcon from "../../../../imgs/project.svg";
-
 type Props = {
   setSelect: (id: number, dataId: number, isChecked: boolean) => void;
   setSearchName: (value: string, id: number) => void;
@@ -28,14 +25,16 @@ export const DropListForItem = ({
   handlerGetData,
   dataType,
 }: Props) => {
-  const windowWidth = window.innerWidth;
+  let emptyDataPlaceholder = "";
 
   let inputPlaceholder = "Введите название ";
   let title = "";
   if (dataType === "projects") {
+    emptyDataPlaceholder = "Проектов пока нет";
     inputPlaceholder += "проекта";
     title = "Проекты";
   } else if (dataType === "tags") {
+    emptyDataPlaceholder = "Тегов пока нет";
     inputPlaceholder += "тега";
     title = "Теги";
   }
@@ -46,22 +45,12 @@ export const DropListForItem = ({
         className={Style.button}
         onClick={() => handlerGetData(dataId, isShow)}
       >
-        {windowWidth > 1000 ? (
-          <>
-            {title}
-            <img
-              className={Style.triangle}
-              src={isShow ? triangleUp : triangleDown}
-              alt=""
-            />
-          </>
-        ) : (
-          <img
-            className={Style.icons}
-            src={dataType === "projects" ? projectIcon : tagIcon}
-            alt=""
-          />
-        )}
+        {title}
+        <img
+          className={Style.triangle}
+          src={isShow ? triangleUp : triangleDown}
+          alt=""
+        />
       </button>
       {isShow ? (
         <div className={Style.main}>
@@ -74,20 +63,24 @@ export const DropListForItem = ({
             />
           </form>
           <div className={Style.projects}>
-            {data.map((item) => (
-              <DropElement
-                key={item.id}
-                name={
-                  dataType === "projects"
-                    ? (item as projectType).projectName
-                    : (item as tagType).tagName
-                }
-                isConnected={item.isChecked}
-                handlerSetSelected={() => {
-                  setSelect(dataId, item.id, item.isChecked);
-                }}
-              />
-            ))}
+            {data.length > 0 ? (
+              data.map((item) => (
+                <DropElement
+                  key={item.id}
+                  name={
+                    dataType === "projects"
+                      ? (item as projectType).projectName
+                      : (item as tagType).tagName
+                  }
+                  isConnected={item.isChecked}
+                  handlerSetSelected={() => {
+                    setSelect(dataId, item.id, item.isChecked);
+                  }}
+                />
+              ))
+            ) : (
+              <div className={Style.emptyData}>{emptyDataPlaceholder}</div>
+            )}
           </div>
         </div>
       ) : null}
