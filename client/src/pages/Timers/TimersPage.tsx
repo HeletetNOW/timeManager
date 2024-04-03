@@ -16,10 +16,6 @@ export const TimersPage = () => {
     dispatch(getTimers(selectDate));
   }, [dispatch, selectDate]);
 
-  useEffect(() => {
-    dispatch(getTimers(selectDate));
-  }, [dispatch]);
-
   return (
     <div>
       <div className={Style.header}>

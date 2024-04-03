@@ -43,6 +43,10 @@ export const TimersItem = ({
     };
   }, [pauseTimer]);
 
+  useEffect(() => {
+    setCurrentTime(sumTime);
+  }, [sumTime, setCurrentTime]);
+
   const handlerStartTimer = () => {
     timerControl(timerId, "start");
   };
