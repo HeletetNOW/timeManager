@@ -10,6 +10,8 @@ import startTimerIcon from "../../../imgs/startTimer.svg";
 type Props = {
   timerControl: (timerId: number, action: "start" | "stop") => void;
   handlerDeleteTimer: (id: number) => void;
+  handlerSetCurrentEditTimer: (id: number) => void;
+  isEdit: boolean;
   timerId: number;
   pauseTimer: boolean;
   projects: projectType[];
@@ -23,11 +25,13 @@ export const TimersItem = ({
   timerName,
   pauseTimer,
   timerId,
+  isEdit,
   sumTime,
   timerControl,
   projectsList,
   tagsList,
   handlerDeleteTimer,
+  handlerSetCurrentEditTimer,
 }: Props) => {
   const [currentTime, setCurrentTime] = useState(sumTime);
 
@@ -66,29 +70,55 @@ export const TimersItem = ({
         </div>
       </div>
       <div className={Style.actions}>
-        {pauseTimer ? (
-          <div onClick={handlerStartTimer} className={Style.buttonControl}>
-            <img alt="" src={startTimerIcon} />
-          </div>
-        ) : (
-          <div onClick={handlerStopTimer} className={Style.buttonControl}>
-            <img alt="" src={pauseTimerIcon} />
-          </div>
-        )}
-        <div className={Style.projectsList}>{projectsList}</div>
-        <div className={Style.tagsList}>{tagsList}</div>
-        <div className={Style.changeName}>
-          <button className={`${Style.title} ${Style.changeNameButton}`}>
-            Изменить
-          </button>
+        <div className={Style.icons}>
+          {pauseTimer ? (
+            <div onClick={handlerStartTimer} className={Style.buttonControl}>
+              <img alt="" src={startTimerIcon} />
+            </div>
+          ) : (
+            <div onClick={handlerStopTimer} className={Style.buttonControl}>
+              <img alt="" src={pauseTimerIcon} />
+            </div>
+          )}
+          <div className={Style.projectsList}>{projectsList}</div>
+          <div className={Style.tagsList}>{tagsList}</div>
         </div>
-        <div className={Style.delete}>
-          <button
-            onClick={() => handlerDeleteTimer(timerId)}
-            className={`${Style.title} ${Style.deleteButton}`}
-          >
-            Удалить
-          </button>
+        <div className={Style.setData}>
+          <div className={Style.changeName}>
+            {isEdit ? (
+              <>
+                <button
+                  className={`${Style.title} ${Style.saveButton}`}
+                  onClick={() => {}}
+                >
+                  Сохранить
+                </button>
+                <button
+                  className={`${Style.title} ${Style.cancelButton}`}
+                  onClick={() => handlerSetCurrentEditTimer(0)}
+                >
+                  Отмена
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  className={`${Style.title} ${Style.changeNameButton}`}
+                  onClick={() => handlerSetCurrentEditTimer(timerId)}
+                >
+                  Изменить
+                </button>
+                <div className={Style.delete}>
+                  <button
+                    onClick={() => handlerDeleteTimer(timerId)}
+                    className={`${Style.title} ${Style.deleteButton}`}
+                  >
+                    Удалить
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>

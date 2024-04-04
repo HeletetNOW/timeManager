@@ -25,7 +25,9 @@
 }
 
 .changeNameButton,
-.deleteButton {
+.deleteButton,
+.saveButton,
+.cancelButton {
   border: 0;
   background: none;
 }
@@ -39,7 +41,9 @@
 .tagsList,
 .buttonControl,
 .changeNameButton,
-.deleteButton {
+.deleteButton,
+.saveButton,
+.cancelButton {
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -50,7 +54,8 @@
 .buttonControl::before,
 .projectsList::before,
 .tagsList::before,
-.changeNameButton::before {
+.changeNameButton::before,
+.saveButton::before {
   right: 0;
   transform: translate(50%, -50%);
   top: 50%;
@@ -72,11 +77,19 @@
   font-size: 20px;
   width: 110px;
 }
+
+.icons {
+  display: flex;
+}
 .info {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
   justify-content: center;
+}
+
+.changeName {
+  display: flex;
 }
 
 @media (max-width: 1500px) {
@@ -91,6 +104,10 @@
   }
 }
 
+.setData {
+  display: flex;
+}
+
 @media (max-width: 1000px) {
   .buttonControl::before,
   .projectsList::before,
@@ -103,7 +120,12 @@
   .projectsList,
   .tagsList,
   .changeNameButton {
-    padding: 0 10px;
+    padding: 0 15px;
+  }
+
+  .tagsList div button,
+  .projectsList div button {
+    padding: 0;
   }
 
   .container {
@@ -122,5 +144,28 @@
 
   .projectsList div button img {
     width: 30px;
+  }
+}
+
+@media (max-width: 500px) {
+  .buttonControl,
+  .projectsList,
+  .tagsList,
+  .changeNameButton {
+    padding: 0 30px;
+  }
+
+  .container {
+    height: 120px;
+  }
+
+  .setData {
+    width: 100%;
+    justify-content: center;
+  }
+  .icons {
+    margin-bottom: 10px;
+    width: 100%;
+    justify-content: center;
   }
 }

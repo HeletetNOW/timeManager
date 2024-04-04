@@ -12,6 +12,8 @@
 }
 
 .main {
+  height: 150px;
+  width: 223px;
   padding: 10px 20px;
   display: block;
   position: absolute;
@@ -27,7 +29,7 @@
 .projects {
   padding: 5px;
   overflow-y: auto;
-  max-height: 100px;
+  height: 100px;
 }
 .container {
   position: relative;
@@ -39,8 +41,23 @@
   padding: 10px 0;
 }
 
+.info {
+  position: absolute;
+}
+
 @media (max-width: 1000px) {
   .main {
     right: 100%;
+  }
+}
+
+@media (max-width: 700px) {
+  .container {
+    position: static;
+  }
+  .main {
+    top: 220px;
+    left: 50px;
+    transform: translate(0);
   }
 }

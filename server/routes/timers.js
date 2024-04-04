@@ -37,6 +37,13 @@ router.post(
   require("../controllers/timers/change/setTimerName.js")
 );
 
+//Set timer sumTime
+router.post(
+  "/set/sum",
+  checkAuth,
+  require("../controllers/timers/change/setSumTime.js")
+);
+
 //Add project
 router.post(
   "/add/project",

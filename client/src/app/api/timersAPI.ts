@@ -33,4 +33,11 @@ export const timersAPI = {
   async removeProjectFromTimer(projectId: number, id: number) {
     return instance.post("/timers/remove/project", { projectId, id });
   },
+
+  async setTimerName(id: number, timerName: string) {
+    return instance.post("/timers/set/name", { id, timerName });
+  },
+  async setTimerSum(id: number, sumTime: number) {
+    return instance.post("/timers/set/sum", { id, sumTime });
+  },
 };

@@ -25,9 +25,11 @@ export const TimersList = ({ timers }: Props) => {
 
   const [isFetching, setFetching] = useState(false);
 
-  const { currentTimerIsShowTags, currentTimerIsShowProjects } = useAppSelector(
-    (state) => state.timersReducer
-  );
+  const {
+    currentTimerIsShowTags,
+    currentTimerIsShowProjects,
+    currentEditTimer,
+  } = useAppSelector((state) => state.timersReducer);
 
   const dispatch = useAppDispatch();
 
@@ -75,6 +77,10 @@ export const TimersList = ({ timers }: Props) => {
     );
   };
 
+  const handlerSetCurrentEditTimer = (id: number) => {
+    dispatch(timersSlice.actions.setCurrentEditTimer(id));
+  };
+
   const handlerSetTags = async (
     id: number,
     tagId: number,
@@ -111,6 +117,7 @@ export const TimersList = ({ timers }: Props) => {
     <div className={Style.container}>
       {timers.length > 0 ? (
         timers.map((timer) => {
+          const isEdit = timer.id === currentEditTimer;
           return (
             <div
               className={`${Style.item} ${isFetching ? Style.isFetching : ""}`}
@@ -118,6 +125,7 @@ export const TimersList = ({ timers }: Props) => {
               aria-disabled={isFetching}
             >
               <TimersItem
+                handlerSetCurrentEditTimer={handlerSetCurrentEditTimer}
                 handlerDeleteTimer={handlerDeleteTimer}
                 timerControl={handlerControlTimer}
                 timerId={timer.id}
@@ -125,6 +133,7 @@ export const TimersList = ({ timers }: Props) => {
                 projects={timer.projects}
                 sumTime={timer.sumTime}
                 timerName={timer.timerName}
+                isEdit={isEdit}
                 tagsList={
                   <DropListForItem
                     setSelect={handlerSetTags}

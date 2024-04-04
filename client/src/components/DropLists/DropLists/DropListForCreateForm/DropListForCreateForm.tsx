@@ -122,33 +122,35 @@ export const DropListForCreateForm = ({
       </button>
       {isShow ? (
         <div className={Style.main}>
-          <form onSubmit={(event) => event.preventDefault()}>
-            <input
-              type="text"
-              placeholder={inputPlaceholder}
-              value={searchValue}
-              onChange={(value) => setSearchValue(value.target.value)}
-            />
-          </form>
-          <div className={Style.projects}>
-            {data.length > 0 ? (
-              data.map((item) => (
-                <DropElement
-                  key={item.id}
-                  name={
-                    dataType === "projects"
-                      ? (item as projectType).projectName
-                      : (item as tagType).tagName
-                  }
-                  isConnected={item.isChecked}
-                  handlerSetSelected={() => {
-                    handlerSetDate(item.id, item.isChecked);
-                  }}
-                />
-              ))
-            ) : (
-              <div className={Style.emptyData}>{emptyDataPlaceholder}</div>
-            )}
+          <div className={Style.info}>
+            <form onSubmit={(event) => event.preventDefault()}>
+              <input
+                type="text"
+                placeholder={inputPlaceholder}
+                value={searchValue}
+                onChange={(value) => setSearchValue(value.target.value)}
+              />
+            </form>
+            <div className={Style.projects}>
+              {data.length > 0 ? (
+                data.map((item) => (
+                  <DropElement
+                    key={item.id}
+                    name={
+                      dataType === "projects"
+                        ? (item as projectType).projectName
+                        : (item as tagType).tagName
+                    }
+                    isConnected={item.isChecked}
+                    handlerSetSelected={() => {
+                      handlerSetDate(item.id, item.isChecked);
+                    }}
+                  />
+                ))
+              ) : (
+                <div className={Style.emptyData}>{emptyDataPlaceholder}</div>
+              )}
+            </div>
           </div>
         </div>
       ) : null}
