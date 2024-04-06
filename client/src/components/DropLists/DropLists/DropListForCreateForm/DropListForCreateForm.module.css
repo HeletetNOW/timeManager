@@ -13,7 +13,6 @@
 
 .main {
   height: 150px;
-  width: 223px;
   padding: 10px 20px;
   display: block;
   position: absolute;
@@ -41,10 +40,6 @@
   padding: 10px 0;
 }
 
-.info {
-  position: absolute;
-}
-
 @media (max-width: 1000px) {
   .main {
     right: 100%;
@@ -56,8 +51,15 @@
     position: static;
   }
   .main {
+    width: 50%;
     top: 220px;
-    left: 50px;
-    transform: translate(0);
+    left: 50%;
+    transform: translate(-50%, 0%);
+  }
+}
+
+@media (max-width: 500px) {
+  .main {
+    width: 80%;
   }
 }

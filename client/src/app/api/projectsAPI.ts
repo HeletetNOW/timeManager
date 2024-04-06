@@ -7,8 +7,7 @@ export const projectsAPI = {
     projectName?: string,
     order?: string,
     id?: number,
-    sortBy?: string,
-    timerId?: number
+    sortBy?: string
   ): Promise<AxiosResponse> {
     return instance.post("/projects", {
       sortBy,
@@ -16,8 +15,10 @@ export const projectsAPI = {
       order,
       projectName,
       tagId,
-      timerId,
     });
+  },
+  async getSubProjects(timerId?: number) {
+    return instance.get(`/projects/get/subprojects/${timerId}`);
   },
   async createProject(
     projectName: string,

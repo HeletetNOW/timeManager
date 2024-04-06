@@ -27,7 +27,8 @@
 .changeNameButton,
 .deleteButton,
 .saveButton,
-.cancelButton {
+.cancelButton,
+.buttonControl {
   border: 0;
   background: none;
 }
@@ -50,12 +51,24 @@
   position: relative;
   padding: 0 20px;
 }
+.isFetching {
+  opacity: 0.5;
+}
+
+.isFetchingContainer {
+  pointer-events: none;
+}
+
+.dropListsFetching div button img {
+  opacity: 0.5;
+}
 
 .buttonControl::before,
 .projectsList::before,
 .tagsList::before,
 .changeNameButton::before,
 .saveButton::before {
+  opacity: 1;
   right: 0;
   transform: translate(50%, -50%);
   top: 50%;
@@ -73,6 +86,7 @@
 }
 
 .count {
+  display: flex;
   padding: 0 10px;
   font-size: 20px;
   width: 110px;
@@ -90,6 +104,24 @@
 
 .changeName {
   display: flex;
+}
+
+.changeNameButton img,
+.deleteButton img,
+.cancelButton img,
+.saveButton img {
+  width: 30px;
+}
+
+.setTimerInput,
+.editTimerInput {
+  height: 30px;
+  width: 30px;
+  font-size: 20px;
+}
+
+.editTimerInput {
+  width: 300px;
 }
 
 @media (max-width: 1500px) {
@@ -112,7 +144,8 @@
   .buttonControl::before,
   .projectsList::before,
   .tagsList::before,
-  .changeNameButton::before {
+  .changeNameButton::before,
+  .saveButton::before {
     display: none;
   }
 
@@ -138,8 +171,15 @@
     width: 100%;
   }
 
-  .title {
+  .title,
+  .setTimerInput,
+  .editTimerInput {
     font-size: 16px;
+  }
+
+  .setTimerInput,
+  .editTimerInput {
+    height: 24px;
   }
 
   .projectsList div button img {
@@ -152,7 +192,11 @@
   .projectsList,
   .tagsList,
   .changeNameButton {
-    padding: 0 30px;
+    padding: 0 15px;
+  }
+
+  .editTimerInput {
+    width: 200px;
   }
 
   .container {
@@ -160,12 +204,6 @@
   }
 
   .setData {
-    width: 100%;
-    justify-content: center;
-  }
-  .icons {
-    margin-bottom: 10px;
-    width: 100%;
     justify-content: center;
   }
 }

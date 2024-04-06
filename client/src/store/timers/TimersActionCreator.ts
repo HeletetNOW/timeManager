@@ -1,38 +1,43 @@
 import { projectsAPI } from "../../app/api/projectsAPI";
 import { tagsAPI } from "../../app/api/tagsAPI";
 import { timersAPI } from "../../app/api/timersAPI";
-import { projectType, tagType } from "../../types/types";
+import { projectType, subProjectType, tagType } from "../../types/types";
 import { AppDispatch, RootState } from "../store";
 import { timersSlice } from "./TimersSlice";
 
-export const getTimers = (date: number) => async (dispatch: AppDispatch) => {
-  try {
-    dispatch(timersSlice.actions.timersFetching());
+export const getTimers =
+  (date?: number) =>
+  async (dispatch: AppDispatch, getStore: () => RootState) => {
+    try {
+      const { selectDate } = getStore().timersReducer;
 
-    const result = await timersAPI.getTimers(date);
+      dispatch(timersSlice.actions.timersFetching());
 
-    dispatch(timersSlice.actions.setTimers(result.data));
-    dispatch(timersSlice.actions.timersFetchingSuccess());
-    return result;
-  } catch (error: any) {
-    console.log(error.response.data.message);
-    dispatch(
-      timersSlice.actions.timersFetchingError(error.response?.data?.message)
-    );
-    return error.response.status;
-  }
-};
+      const result = await timersAPI.getTimers(date ? date : selectDate);
+
+      dispatch(timersSlice.actions.setTimers(result.data));
+      dispatch(timersSlice.actions.timersFetchingSuccess());
+      return result;
+    } catch (error: any) {
+      console.log(error.response.data.message);
+      dispatch(
+        timersSlice.actions.timersFetchingError(error.response?.data?.message)
+      );
+      return error.response.status;
+    }
+  };
 
 export const createTimer =
-  (timerName: string, projects?: { id: number }[], tags?: { id: number }[]) =>
+  (timerName: string, tags?: { id: number }[]) =>
   async (dispatch: AppDispatch) => {
     try {
       dispatch(timersSlice.actions.timersFetching());
 
-      const result = await timersAPI.createTimer(timerName, projects, tags);
+      const result = await timersAPI.createTimer(timerName, tags);
 
       dispatch(timersSlice.actions.timersFetchingSuccess());
-      dispatch(getTimers(new Date().getTime()));
+      dispatch(getTimers());
+
       return result;
     } catch (error: any) {
       console.log(error.response.data.message);
@@ -47,7 +52,7 @@ export const deleteTimer = (id: number) => async (dispatch: AppDispatch) => {
   try {
     const result = await timersAPI.deleteTimer(id);
 
-    dispatch(getTimers(new Date().getTime()));
+    dispatch(getTimers());
     return result;
   } catch (error: any) {
     console.log(error.response.data.message);
@@ -62,7 +67,6 @@ export const controlTimer =
   (timerId: number, action: "start" | "stop") =>
   async (dispatch: AppDispatch, getStore: () => RootState) => {
     try {
-      const { selectDate } = getStore().timersReducer;
       dispatch(timersSlice.actions.timersFetching());
 
       if (action === "start") {
@@ -71,7 +75,7 @@ export const controlTimer =
         await timersAPI.stopTimer(timerId);
       }
 
-      dispatch(getTimers(selectDate));
+      dispatch(getTimers());
       dispatch(timersSlice.actions.timersFetchingSuccess());
     } catch (error: any) {
       console.log(error.response.data.message);
@@ -82,47 +86,76 @@ export const controlTimer =
     }
   };
 
-export const getDataBySelected =
-  (
-    dataType: "tag" | "project",
-    timerId: number,
-    tagName?: string,
-    projectName?: string
-  ) =>
-  async (dispatch: AppDispatch) => {
+export const getSubProjectsBySelected =
+  (timerId: number, projectName: string) => async (dispatch: AppDispatch) => {
+    try {
+      let selectionData: projectType[] = (
+        await projectsAPI.getSubProjects(timerId)
+      ).data;
+      let allData: projectType[] = (
+        await projectsAPI.getProjects(
+          undefined,
+          projectName,
+          "asc",
+          undefined,
+          undefined
+        )
+      ).data;
+
+      let result: (projectType & {
+        subProjects: (subProjectType & { isChecked: boolean })[];
+      })[] = [];
+
+      allData.map((allDataItem: projectType) => {
+        let updatedItem: projectType & {
+          subProjects: (subProjectType & { isChecked: boolean })[];
+        } = {
+          ...allDataItem,
+          subProjects: allDataItem.subProjects.map((subProject) => {
+            return {
+              ...subProject,
+              isChecked: selectionData.some((selectionDataItem) =>
+                selectionDataItem.subProjects.some(
+                  (selectionDataSubProject) =>
+                    selectionDataSubProject.id === subProject.id
+                )
+              ),
+            };
+          }),
+        };
+
+        result.push(updatedItem);
+      });
+
+      return result;
+    } catch (error: any) {
+      console.log(error.response.data.message);
+      dispatch(
+        timersSlice.actions.timersFetchingError(error.response?.data?.message)
+      );
+      return error.response.status;
+    }
+  };
+
+export const getTagsBySelected =
+  (timerId: number, tagName?: string) => async (dispatch: AppDispatch) => {
     try {
       dispatch(timersSlice.actions.timersFetching());
 
-      let allData: (tagType | projectType)[] = [];
-      let selectionData: (tagType | projectType)[] = [];
+      let allData: tagType[] = [];
+      let selectionData: tagType[] = [];
 
-      if (dataType === "project") {
-        allData = (await projectsAPI.getProjects(undefined, projectName)).data;
-        selectionData = (
-          await projectsAPI.getProjects(
-            undefined,
-            projectName,
-            "asc",
-            undefined,
-            undefined,
-            timerId
-          )
-        ).data;
-      } else if (dataType === "tag") {
-        allData = (await tagsAPI.getTags(undefined, tagName)).data;
-        selectionData = (
-          await tagsAPI.getTags("asc", tagName, undefined, undefined, timerId)
-        ).data;
-      }
+      allData = (await tagsAPI.getTags(undefined, tagName)).data;
+      selectionData = (
+        await tagsAPI.getTags("asc", tagName, undefined, undefined, timerId)
+      ).data;
 
-      let result: ((tagType | projectType) & { isChecked: boolean })[] = [];
+      let result: (tagType & { isChecked: boolean })[] = [];
 
-      selectionData.sort((a: tagType | projectType, b: tagType | projectType) =>
-        a.id > b.id ? -1 : 1
-      );
+      selectionData.sort((a: tagType, b: tagType) => (a.id > b.id ? -1 : 1));
 
-      allData.forEach((item: tagType | projectType) => {
-        const itemWithChecked: Partial<tagType | projectType> & {
+      allData.forEach((item: tagType) => {
+        const itemWithChecked: Partial<tagType> & {
           isChecked: boolean;
         } = {
           ...item,
@@ -136,9 +169,7 @@ export const getDataBySelected =
           itemWithChecked.isChecked = true;
           selectionData.pop();
         }
-        result.push(
-          itemWithChecked as (tagType | projectType) & { isChecked: boolean }
-        );
+        result.push(itemWithChecked as tagType & { isChecked: boolean });
       });
 
       dispatch(timersSlice.actions.timersFetchingSuccess());
@@ -152,13 +183,40 @@ export const getDataBySelected =
     }
   };
 
-export const setDataToTimer =
-  (
-    dataIdType: "tag" | "project",
-    timerId: number,
-    dataId: number,
-    action: "delete" | "add"
-  ) =>
+export const setSumTime =
+  (timerId: number, sumTime: number) => async (dispatch: AppDispatch) => {
+    try {
+      const result = await timersAPI.setTimerSum(timerId, sumTime);
+
+      dispatch(getTimers());
+      return result;
+    } catch (error: any) {
+      console.log(error.response.data.message);
+      dispatch(
+        timersSlice.actions.timersFetchingError(error.response?.data?.message)
+      );
+      return error.response.status;
+    }
+  };
+
+export const setTimerName =
+  (timerId: number, timerName: string) => async (dispatch: AppDispatch) => {
+    try {
+      const result = await timersAPI.setTimerName(timerId, timerName);
+
+      dispatch(getTimers());
+      return result;
+    } catch (error: any) {
+      console.log(error.response.data.message);
+      dispatch(
+        timersSlice.actions.timersFetchingError(error.response?.data?.message)
+      );
+      return error.response.status;
+    }
+  };
+
+export const setTagToTimer =
+  (timerId: number, dataId: number, action: "delete" | "add") =>
   async (dispatch: AppDispatch) => {
     try {
       dispatch(timersSlice.actions.timersFetching());
@@ -166,21 +224,35 @@ export const setDataToTimer =
       let status;
 
       if (action === "add") {
-        if (dataIdType === "tag") {
-          status = (await timersAPI.addTagToTimer(dataId, timerId)).status;
-        } else if (dataIdType === "project") {
-          status = (await timersAPI.addProjectToTimer(dataId, timerId)).status;
-        }
+        status = (await timersAPI.addTagToTimer(dataId, timerId)).status;
       } else if (action === "delete") {
-        if (dataIdType === "tag") {
-          status = (await timersAPI.removeTagFromTimer(dataId, timerId)).status;
-        } else if (dataIdType === "project") {
-          status = (await timersAPI.removeProjectFromTimer(dataId, timerId))
-            .status;
-        }
+        status = (await timersAPI.removeTagFromTimer(dataId, timerId)).status;
       }
 
       dispatch(timersSlice.actions.timersFetchingSuccess());
+      return status;
+    } catch (error: any) {
+      console.log(error.response.data.message);
+      dispatch(
+        timersSlice.actions.timersFetchingError(error.response?.data?.message)
+      );
+      return error.response.status;
+    }
+  };
+
+export const setSubProjectToTimer =
+  (timerId: number, dataId: number, action: "delete" | "add") =>
+  async (dispatch: AppDispatch) => {
+    try {
+      let status;
+
+      if (action === "add") {
+        status = (await timersAPI.addSubProjectToTimer(dataId, timerId)).status;
+      } else if (action === "delete") {
+        status = (await timersAPI.removeSubProjectFromTimer(dataId, timerId))
+          .status;
+      }
+
       return status;
     } catch (error: any) {
       console.log(error.response.data.message);

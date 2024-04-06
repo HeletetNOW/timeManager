@@ -9,27 +9,16 @@ export const TimersCreateForm = () => {
   const dispatch = useAppDispatch();
   const [timerName, setTimerName] = useState("");
 
-  const [isShowProjects, setShowProjects] = useState(false);
-  const [selectedProjects, setSelectedProjects] = useState<{ id: number }[]>(
-    []
-  );
-
   const [isShowTags, setShowTags] = useState(false);
   const [selectedTags, setSelectedTags] = useState<{ id: number }[]>([]);
 
   const handlerCreateTimer = () => {
-    dispatch(createTimer(timerName, selectedProjects, selectedTags));
+    dispatch(createTimer(timerName, selectedTags));
     setTimerName("");
   };
 
   const handlerSetShowTags = (value: boolean) => {
-    setShowProjects(isShowProjects ? !isShowProjects : isShowProjects);
     setShowTags(value);
-  };
-
-  const handlerSetShowProjects = (value: boolean) => {
-    setShowTags(isShowTags ? !isShowTags : isShowTags);
-    setShowProjects(value);
   };
 
   return (
@@ -42,21 +31,13 @@ export const TimersCreateForm = () => {
       />
       <div className={Style.selectData}>
         <div className={Style.icons}>
-          <div className={Style.projects}>
-            <DropListForCreateForm
-              dataType="projects"
-              selectedDate={selectedProjects}
-              setSelectedDate={setSelectedProjects}
-              isShow={isShowTags ? false : isShowProjects}
-              setShow={handlerSetShowProjects}
-            />
-          </div>
+          <div className={Style.projects}></div>
           <div className={Style.tags}>
             <DropListForCreateForm
               dataType="tags"
               selectedDate={selectedTags}
               setSelectedDate={setSelectedTags}
-              isShow={isShowProjects ? false : isShowTags}
+              isShow={isShowTags}
               setShow={handlerSetShowTags}
             />
           </div>

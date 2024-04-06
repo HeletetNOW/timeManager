@@ -17,6 +17,12 @@ router.delete(
 
 router.post("/", checkAuth, require("../controllers/projects/get/getProjects"));
 
+router.get(
+  "/get/subprojects/:timerId",
+  checkAuth,
+  require("../controllers/projects/get/getSubProjects")
+);
+
 router.post(
   "/set/status",
   checkAuth,

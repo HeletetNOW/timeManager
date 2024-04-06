@@ -11,10 +11,6 @@
   height: 70px;
 }
 
-.isFetching {
-  pointer-events: none;
-}
-
 @media (max-width: 500px) {
   .item {
     height: auto;

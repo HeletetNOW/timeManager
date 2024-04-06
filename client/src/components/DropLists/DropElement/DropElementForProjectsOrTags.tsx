@@ -6,19 +6,21 @@ type Props = {
   isConnected: boolean;
 };
 
-export const DropElement = ({
+export const DropElementForProjectsOrTags = ({
   handlerSetSelected,
   name,
   isConnected,
 }: Props) => {
   return (
     <div className={Style.item}>
-      <input
-        type="checkbox"
-        defaultChecked={isConnected}
-        onChange={() => handlerSetSelected(!isConnected)}
-      />
-      <div>{name}</div>
+      <div>
+        <input
+          type="checkbox"
+          defaultChecked={isConnected}
+          onChange={() => handlerSetSelected(!isConnected)}
+        />
+        {name}
+      </div>
     </div>
   );
 };

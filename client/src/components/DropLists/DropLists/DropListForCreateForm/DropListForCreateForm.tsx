@@ -8,7 +8,7 @@ import { projectType, tagType } from "../../../../types/types";
 import { useAppDispatch } from "../../../../hooks/hooks";
 import { getProjects } from "../../../../store/projects/ActionCreators";
 import { getTags } from "../../../../store/tags/ActionCreators";
-import { DropElement } from "../../DropElement/DropElement";
+import { DropElementForProjectsOrTags } from "../../DropElement/DropElementForProjectsOrTags";
 
 type Props = {
   setSelectedDate: (date: { id: number }[]) => void;
@@ -134,7 +134,7 @@ export const DropListForCreateForm = ({
             <div className={Style.projects}>
               {data.length > 0 ? (
                 data.map((item) => (
-                  <DropElement
+                  <DropElementForProjectsOrTags
                     key={item.id}
                     name={
                       dataType === "projects"

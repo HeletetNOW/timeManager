@@ -18,7 +18,7 @@ const addTagsToTimer = async (req, res) => {
         },
       },
       include: {
-        projects: true,
+        subProjects: true,
         tags: true,
       },
     });

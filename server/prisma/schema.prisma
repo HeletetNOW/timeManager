@@ -25,7 +25,7 @@ model Timer {
   author        User @relation(fields: [authorId], references: [id])
   timerName     String
   tags          Tag[]
-  projects      Project[]
+  subProjects   SubProject[]
   startTime     DateTime
   pauseTimer    Boolean
   sumTime       Int
@@ -38,11 +38,9 @@ model Project{
   status      Boolean
   author      User @relation(fields: [authorId], references: [id])
   tags        Tag[]
-  timers      Timer[]
   subProjects  SubProject[] 
   projectName String
   description String
-
 }
 
 model SubProject{
@@ -51,6 +49,7 @@ model SubProject{
   subProjectName String
   description String
   projectId   Int
+  timers      Timer[]
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade )
 }
 

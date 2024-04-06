@@ -1,14 +1,6 @@
 const { prisma } = require("../../../prisma/prisma-client");
 
-const sort = async (
-  sortBy,
-  isDesc,
-  id,
-  tagId,
-  timerId,
-  maybeProjectName,
-  authorId
-) => {
+const sort = async (sortBy, isDesc, id, tagId, maybeProjectName, authorId) => {
   try {
     const where = {
       authorId,
@@ -21,9 +13,6 @@ const sort = async (
           where.tags = { some: { id: { in: tagIds } } };
         }
       }
-      if (timerId) {
-        where.timers = { some: { id: timerId } };
-      }
     } else {
       where.id = Number(id);
     }
@@ -34,7 +23,7 @@ const sort = async (
     const data = await prisma.project.findMany({
       orderBy,
       where: where,
-      include: { tags: true, timers: true, subProjects: true },
+      include: { tags: true, subProjects: true },
     });
 
     return data;

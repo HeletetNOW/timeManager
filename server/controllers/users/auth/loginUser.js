@@ -1,5 +1,6 @@
 const { prisma } = require("../../../prisma/prisma-client");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const login = async (req, res) => {
   try {
@@ -16,7 +17,7 @@ const login = async (req, res) => {
     const isPasswordCorrect =
       user && (await bcrypt.compare(password, user.password));
 
-    res.cookie("id", user.id);
+    res.cookie("id", jwt.sign(user.id, process.env.SECRET_KEY));
 
     if (user && isPasswordCorrect) {
       return res.status(200).json({

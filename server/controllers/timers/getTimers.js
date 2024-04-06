@@ -24,7 +24,7 @@ const getTimers = async (req, res) => {
       },
       include: {
         tags: true,
-        projects: true,
+        subProjects: true,
       },
     });
 

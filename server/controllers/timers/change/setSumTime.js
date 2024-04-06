@@ -4,7 +4,7 @@ const setTimerName = async (req, res) => {
   try {
     const { sumTime, id } = req.body;
 
-    if (!sumTime || !id) {
+    if (sumTime.typeof === Number || !id) {
       return res
         .status(400)
         .json({ message: "Заполните все обязательные поля." });

@@ -1,10 +1,10 @@
 const { prisma } = require("../../../prisma/prisma-client");
 
-const removeProjectFromTimer = async (req, res) => {
+const removeSubProjectFromTimer = async (req, res) => {
   try {
-    const { id, projectId } = req.body;
+    const { id, subProjectId } = req.body;
 
-    if (!id || !projectId) {
+    if (!id || !subProjectId) {
       return res
         .status(400)
         .json({ message: "Заполните все обязательные поля." });
@@ -13,20 +13,20 @@ const removeProjectFromTimer = async (req, res) => {
     const removedProject = await prisma.timer.update({
       where: { id },
       data: {
-        projects: {
-          disconnect: { id: projectId },
+        subProjects: {
+          disconnect: { id: subProjectId },
         },
       },
       include: {
-        projects: true,
+        subProjects: true,
         tags: true,
       },
     });
 
     return res.status(200).json(removedProject);
   } catch (error) {
-    return res.status(500).json({ message: "Не удалось удалить проекты." });
+    return res.status(500).json({ message: "Не удалось удалить подзадачу." });
   }
 };
 
-module.exports = removeProjectFromTimer;
+module.exports = removeSubProjectFromTimer;

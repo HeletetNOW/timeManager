@@ -7,10 +7,9 @@ export const timersAPI = {
   },
   async createTimer(
     timerName: string,
-    projects?: { id: number }[],
     tags?: { id: number }[]
   ): Promise<AxiosResponse> {
-    return instance.post("/timers/add", { timerName, projects, tags });
+    return instance.post("/timers/add", { timerName, tags });
   },
   async deleteTimer(id: number): Promise<AxiosResponse> {
     return instance.delete(`/timers/delete/${id}`);
@@ -27,11 +26,11 @@ export const timersAPI = {
   async removeTagFromTimer(tagId: number, id: number) {
     return instance.post("/timers/remove/tag", { tagId, id });
   },
-  async addProjectToTimer(projectId: number, id: number) {
-    return instance.post("/timers/add/project", { projectId, id });
+  async addSubProjectToTimer(subProjectId: number, id: number) {
+    return instance.post("/timers/add/subproject", { subProjectId, id });
   },
-  async removeProjectFromTimer(projectId: number, id: number) {
-    return instance.post("/timers/remove/project", { projectId, id });
+  async removeSubProjectFromTimer(subProjectId: number, id: number) {
+    return instance.post("/timers/remove/subproject", { subProjectId, id });
   },
 
   async setTimerName(id: number, timerName: string) {

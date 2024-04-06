@@ -24,7 +24,6 @@ const createProject = async (req, res) => {
       },
       include: {
         tags: true,
-        timers: true,
       },
     });
 

@@ -1,7 +1,6 @@
 import Style from "./SubProjectShowList.module.css";
 
-import triangleUp from "../../../imgs/triangleUp.svg";
-import triangleDown from "../../../imgs/triangleDown.svg";
+import triangle from "../../../imgs/triangle.svg";
 
 import projectIcon from "../../../imgs/project.svg";
 
@@ -30,7 +29,7 @@ export const SubProjectShowList = ({
           Подзадачи
           <img
             className={Style.triangle}
-            src={isShowSubProjects ? triangleUp : triangleDown}
+            src={isShowSubProjects ? triangle : triangle}
             alt=""
           />
         </>

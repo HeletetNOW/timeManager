@@ -46,9 +46,9 @@ router.post(
 
 //Add project
 router.post(
-  "/add/project",
+  "/add/subproject",
   checkAuth,
-  require("../controllers/timers/add/addProjectsToTimer.js")
+  require("../controllers/timers/add/addSubProjectToTimer.js")
 );
 
 //Add tag
@@ -59,8 +59,8 @@ router.post(
 );
 
 router.post(
-  "/remove/project",
-  require("../controllers/timers/remove/removeProjectFromTimer.js")
+  "/remove/subproject",
+  require("../controllers/timers/remove/removeSubProjectFromTimer.js")
 );
 
 router.post(

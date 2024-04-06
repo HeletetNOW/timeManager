@@ -3,18 +3,27 @@ import Style from "./DropListForItem.module.css";
 import tagIcon from "../../../../imgs/tag.svg";
 import projectIcon from "../../../../imgs/project.svg";
 
-import { projectType, tagType } from "../../../../types/types";
-import { DropElement } from "../../DropElement/DropElement";
+import { projectType, subProjectType, tagType } from "../../../../types/types";
+import { DropElementForProjectsOrTags } from "../../DropElement/DropElementForProjectsOrTags";
+import { DropElementForSubProjects } from "../../DropElement/DropElementForSubProjects";
 
 type Props = {
   setSelect: (id: number, dataId: number, isChecked: boolean) => void;
   setSearchName: (value: string, id: number) => void;
   handlerGetData: (currentDateId: number, isShow: boolean) => void;
-  dataType: "projects" | "tags";
+  dataType: "subProjects" | "tags" | "projects";
   dataId: number;
   searchName: string;
   isShow: boolean;
-  data: ((projectType | tagType) & { isChecked: boolean })[];
+  data: ((
+    | (
+        | projectType
+        | (projectType & {
+            subProjects: (subProjectType & { isChecked: boolean })[];
+          })
+      )
+    | tagType
+  ) & { isChecked: boolean })[];
 };
 
 export const DropListForItem = ({
@@ -30,14 +39,13 @@ export const DropListForItem = ({
   let emptyDataPlaceholder = "";
 
   let inputPlaceholder = "Введите название ";
-  if (dataType === "projects") {
+  if (dataType === "projects" || dataType === "subProjects") {
     emptyDataPlaceholder = "Проектов пока нет";
     inputPlaceholder += "проекта";
   } else if (dataType === "tags") {
     emptyDataPlaceholder = "Тегов пока нет";
     inputPlaceholder += "тега";
   }
-
   return (
     <div className={Style.container}>
       <button
@@ -46,7 +54,11 @@ export const DropListForItem = ({
       >
         <img
           className={Style.icon}
-          src={dataType === "projects" ? projectIcon : tagIcon}
+          src={
+            dataType === "projects" || dataType === "subProjects"
+              ? projectIcon
+              : tagIcon
+          }
           alt=""
         />
       </button>
@@ -62,20 +74,44 @@ export const DropListForItem = ({
           </form>
           <div className={Style.projects}>
             {data.length > 0 ? (
-              data.map((item) => (
-                <DropElement
-                  key={item.id}
-                  name={
-                    dataType === "projects"
-                      ? (item as projectType).projectName
-                      : (item as tagType).tagName
-                  }
-                  isConnected={item.isChecked}
-                  handlerSetSelected={() => {
-                    setSelect(dataId, item.id, item.isChecked);
-                  }}
-                />
-              ))
+              dataType !== "subProjects" ? (
+                data.map((item) => (
+                  <DropElementForProjectsOrTags
+                    key={item.id}
+                    name={
+                      dataType === "projects"
+                        ? (item as projectType).projectName
+                        : (item as tagType).tagName
+                    }
+                    isConnected={item.isChecked}
+                    handlerSetSelected={() => {
+                      setSelect(dataId, item.id, item.isChecked);
+                    }}
+                  />
+                ))
+              ) : (
+                data.map((item) => (
+                  <DropElementForSubProjects
+                    key={item.id}
+                    subProjects={
+                      (
+                        item as projectType & {
+                          subProjects: (subProjectType & {
+                            isChecked: boolean;
+                          })[];
+                        }
+                      ).subProjects
+                    }
+                    name={(item as projectType).projectName}
+                    handlerSetSelected={(
+                      isChecked: boolean,
+                      subProjectId: number
+                    ) => {
+                      setSelect(dataId, subProjectId, isChecked);
+                    }}
+                  />
+                ))
+              )
             ) : (
               <div className={Style.emptyData}>{emptyDataPlaceholder}</div>
             )}

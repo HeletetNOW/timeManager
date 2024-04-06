@@ -1,15 +1,13 @@
 type Props = {
-  currentTime: number;
+  hours: string;
+  minutes: string;
+  seconds: string;
 };
 
-export const TimersCount = ({ currentTime }: Props) => {
-  const hours = Math.floor(currentTime / 3600);
-  const minutes = Math.floor((currentTime % 3600) / 60);
-  const seconds = currentTime % 60;
+export const TimersCount = ({ hours, minutes, seconds }: Props) => {
   return (
     <div>
-      {hours.toString().padStart(2, "0")}:{minutes.toString().padStart(2, "0")}:
-      {seconds.toString().padStart(2, "0")}
+      {hours}:{minutes}:{seconds}
     </div>
   );
 };

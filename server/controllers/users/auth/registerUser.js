@@ -31,7 +31,10 @@ const register = async (req, res) => {
       },
     });
 
-    res.cookie("id", user.id, { httpOnly: true, maxAge: 172800000 });
+    res.cookie("id", jwt.sign(user.id, process.env.SECRET_KEY), {
+      httpOnly: true,
+      maxAge: 172800000,
+    });
 
     if (user) {
       return res.status(200).json({

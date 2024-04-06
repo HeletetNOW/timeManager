@@ -3,8 +3,12 @@ import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import {
   controlTimer,
   deleteTimer,
-  getDataBySelected,
-  setDataToTimer,
+  getTagsBySelected,
+  setTagToTimer,
+  setSumTime,
+  setTimerName,
+  getSubProjectsBySelected,
+  setSubProjectToTimer,
 } from "../../../store/timers/TimersActionCreator";
 import { timerType } from "../../../types/types";
 import { DropListForItem } from "../../DropLists/DropLists/DropListForItem/DropListForItem";
@@ -37,7 +41,9 @@ export const TimersList = ({ timers }: Props) => {
     timerId: number,
     action: "start" | "stop"
   ) => {
-    dispatch(controlTimer(timerId, action));
+    setFetching(true);
+    await dispatch(controlTimer(timerId, action));
+    setFetching(false);
   };
 
   const setTimerShowProjects = (timerId: number) => {
@@ -51,20 +57,18 @@ export const TimersList = ({ timers }: Props) => {
 
   const handlerGetTagsByTimer = async (timerId: number, isShow: boolean) => {
     setFetching(true);
-    setTags(await dispatch(getDataBySelected("tag", timerId, searcTagName)));
+    setTags(await dispatch(getTagsBySelected(timerId, searcTagName)));
     setTimerShowProjects(0);
     setTimerShowTags(isShow ? 0 : timerId);
   };
 
-  const handlerGetProjectsByTimer = async (
+  const handlerGetSubProjectsByTimer = async (
     timerId: number,
     isShow: boolean
   ) => {
     setFetching(true);
     setProjects(
-      await dispatch(
-        getDataBySelected("project", timerId, undefined, searchProjectName)
-      )
+      await dispatch(getSubProjectsBySelected(timerId, searchProjectName))
     );
     setTimerShowTags(0);
     setTimerShowProjects(isShow ? 0 : timerId);
@@ -72,9 +76,7 @@ export const TimersList = ({ timers }: Props) => {
 
   const handlerSetSearchProjectName = async (value: string, id: number) => {
     setSearchProjectName(value);
-    setProjects(
-      await dispatch(getDataBySelected("project", id, undefined, value))
-    );
+    setProjects(await dispatch(getSubProjectsBySelected(id, value)));
   };
 
   const handlerSetCurrentEditTimer = (id: number) => {
@@ -88,28 +90,48 @@ export const TimersList = ({ timers }: Props) => {
   ) => {
     const action = isChecked ? "delete" : "add";
 
-    dispatch(setDataToTimer("tag", id, tagId, action));
-    setTags(await dispatch(getDataBySelected("tag", id, searcTagName)));
+    dispatch(setTagToTimer(id, tagId, action));
+    setTags(await dispatch(getTagsBySelected(id, searcTagName)));
   };
 
-  const handlerSetProjects = async (
+  const handlerSetSubProjects = async (
     id: number,
-    projectId: number,
+    subProjectId: number,
     isChecked: boolean
   ) => {
+    setFetching(true);
     const action = isChecked ? "delete" : "add";
 
-    dispatch(setDataToTimer("project", id, projectId, action));
+    dispatch(setSubProjectToTimer(id, subProjectId, action));
     setProjects(
-      await dispatch(
-        getDataBySelected("project", id, undefined, searchProjectName)
-      )
+      await dispatch(getSubProjectsBySelected(id, searchProjectName))
     );
+    setFetching(false);
   };
 
   const handlerDeleteTimer = (timerId: number) => {
     setFetching(true);
     dispatch(deleteTimer(timerId));
+    setFetching(false);
+  };
+
+  const handlerSetSumTime = (
+    timerId: number,
+    hours: string,
+    minutes: string,
+    seconds: string
+  ) => {
+    setFetching(true);
+    const sumTime =
+      Number(hours) * 3600 + Number(minutes) * 60 + Number(seconds);
+
+    dispatch(setSumTime(timerId, sumTime));
+    setFetching(false);
+  };
+
+  const handlerSetTimerName = (timerId: number, timerName: string) => {
+    setFetching(true);
+    dispatch(setTimerName(timerId, timerName));
     setFetching(false);
   };
 
@@ -120,11 +142,14 @@ export const TimersList = ({ timers }: Props) => {
           const isEdit = timer.id === currentEditTimer;
           return (
             <div
-              className={`${Style.item} ${isFetching ? Style.isFetching : ""}`}
+              className={Style.item}
               key={timer.id}
               aria-disabled={isFetching}
             >
               <TimersItem
+                isFetching={isFetching}
+                handlerSetTimerName={handlerSetTimerName}
+                handlerSetSumTime={handlerSetSumTime}
                 handlerSetCurrentEditTimer={handlerSetCurrentEditTimer}
                 handlerDeleteTimer={handlerDeleteTimer}
                 timerControl={handlerControlTimer}
@@ -153,7 +178,7 @@ export const TimersList = ({ timers }: Props) => {
                 }
                 projectsList={
                   <DropListForItem
-                    setSelect={handlerSetProjects}
+                    setSelect={handlerSetSubProjects}
                     searchName={searchProjectName}
                     setSearchName={handlerSetSearchProjectName}
                     isShow={
@@ -162,8 +187,8 @@ export const TimersList = ({ timers }: Props) => {
                         ? true
                         : false
                     }
-                    dataType="projects"
-                    handlerGetData={handlerGetProjectsByTimer}
+                    dataType="subProjects"
+                    handlerGetData={handlerGetSubProjectsByTimer}
                     data={projects}
                     dataId={timer.id}
                   />
