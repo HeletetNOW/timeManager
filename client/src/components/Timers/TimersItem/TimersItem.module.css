@@ -157,11 +157,6 @@
     padding: 0 15px;
   }
 
-  .tagsList div button,
-  .projectsList div button {
-    padding: 0;
-  }
-
   .container {
     height: 120px;
     width: 100%;
