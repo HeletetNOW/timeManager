@@ -12,6 +12,7 @@ const createProject = async (req, res) => {
       data: {
         projectName,
         description,
+        sumTime: 0,
         author: {
           connect: { id: req.user.id },
         },

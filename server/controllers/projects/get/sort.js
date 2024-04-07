@@ -23,7 +23,11 @@ const sort = async (sortBy, isDesc, id, tagId, maybeProjectName, authorId) => {
     const data = await prisma.project.findMany({
       orderBy,
       where: where,
-      include: { tags: true, subProjects: true },
+      include: {
+        tags: true,
+        subProjects: true,
+        subProjects: { include: { timers: true } },
+      },
     });
 
     return data;

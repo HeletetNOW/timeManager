@@ -102,7 +102,7 @@ export const TimersList = ({ timers }: Props) => {
     setFetching(true);
     const action = isChecked ? "delete" : "add";
 
-    dispatch(setSubProjectToTimer(id, subProjectId, action));
+    await dispatch(setSubProjectToTimer(id, subProjectId, action));
     setProjects(
       await dispatch(getSubProjectsBySelected(id, searchProjectName))
     );

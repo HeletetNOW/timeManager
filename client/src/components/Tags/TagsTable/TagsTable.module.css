@@ -70,3 +70,13 @@
     width: 98%;
   }
 }
+
+@media (max-width: 400px) {
+  .content {
+    flex-wrap: wrap;
+    height: 92px;
+  }
+  .container {
+    height: 100px;
+  }
+}

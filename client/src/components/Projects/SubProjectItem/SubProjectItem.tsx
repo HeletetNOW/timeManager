@@ -1,5 +1,10 @@
 import Style from "./SubProjectItem.module.css";
 
+import acceptIcon from "../../../imgs/accept.svg";
+import noAcceptIcon from "../../../imgs/noAccept.svg";
+
+import deleteSubProjectIcon from "../../../imgs/deleteSubProject.svg";
+
 type Props = {
   subProjectId: number;
   subProjectTitle: string;
@@ -23,30 +28,30 @@ export const SubProjectItem = ({
   return (
     <div className={Style.item}>
       <div className={Style.title}>{subProjectTitle}</div>
-
+      <div className={Style.desc}>{subProjectDescription}</div>
       <div className={Style.content}>
-        <div className={Style.desc}>{subProjectDescription}</div>
-
-        <div className={Style.status}>
+        <div
+          className={Style.status}
+          onClick={() =>
+            handlerSetSubProjectStatus(subProjectId, subProjectStatus)
+          }
+        >
           {subProjectStatus ? (
-            <div className={Style.complete}>Выполнено</div>
+            <div className={Style.complete}>
+              <img src={acceptIcon} alt="" />
+            </div>
           ) : (
-            <div className={Style.noComplete}>Не выполнено</div>
+            <div className={Style.noComplete}>
+              <img src={noAcceptIcon} alt="" />
+            </div>
           )}
         </div>
         <div className={Style.buttons}>
           <button
-            onClick={() =>
-              handlerSetSubProjectStatus(subProjectId, subProjectStatus)
-            }
-          >
-            {subProjectStatus ? "Не выполнено" : "Выполнено"}
-          </button>
-          <button
             className={Style.deleteButton}
             onClick={() => handlerDeleteSubProject(subProjectId)}
           >
-            Удалить
+            <img src={deleteSubProjectIcon} alt="" />
           </button>
         </div>
       </div>

@@ -115,6 +115,7 @@ export const ProjectList = () => {
                   handlerAcceptButton={handlerAcceptButton}
                   handlerDeleteButton={handlerDeleteButton}
                   editName={editName}
+                  sumTime={project.sumTime}
                   status={project.status}
                   projectId={project.id}
                   projectName={project.projectName}

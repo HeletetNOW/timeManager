@@ -37,7 +37,7 @@ export const DropElementForSubProjects = ({
                 <div key={item.id} className={Style.subProject}>
                   <input
                     type="checkbox"
-                    defaultChecked={item.isChecked}
+                    checked={item.isChecked}
                     onChange={() => handlerSetSelected(item.isChecked, item.id)}
                   />
                   <div>{item.subProjectName}</div>

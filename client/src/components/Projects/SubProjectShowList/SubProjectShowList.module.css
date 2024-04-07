@@ -1,5 +1,7 @@
 .subProject {
   text-wrap: nowrap;
+  display: flex;
+
   border: 0;
   background-color: white;
   font-size: 20px;

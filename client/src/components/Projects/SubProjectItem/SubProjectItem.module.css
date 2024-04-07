@@ -1,27 +1,30 @@
 .item {
+  height: 70px;
   width: 100%;
   display: flex;
+  margin-top: 10px;
+  align-items: center;
   justify-content: space-between;
   border: 2px solid #d9d9d9;
-  padding: 10px;
   border-radius: 20px;
 }
 
 .title,
 .desc {
   position: relative;
-  font-size: 15px;
+  font-size: 20px;
   padding: 0 10px;
 }
 
-.title::before {
-  margin-right: 10px;
-  content: "";
-  position: absolute;
-  background-color: #d9d9d9;
-  height: 20px;
-  width: 3px;
-  right: -10px;
+.desc {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  max-height: 70px;
+  width: 600px;
+  text-wrap: wrap;
+  font-size: 16px;
 }
 
 .status {
@@ -29,7 +32,16 @@
 }
 
 .buttons {
+  display: flex;
+  align-items: center;
   margin-left: auto;
+}
+
+.deleteButton {
+  margin-right: 10px;
+  padding: 0;
+  border: 0;
+  background: none;
 }
 
 .complete {
@@ -37,20 +49,25 @@
 }
 
 .noComplete {
+  display: flex;
+  align-items: center;
   color: red;
 }
 
 .content {
+  align-items: center;
   display: flex;
+}
+
+@media (max-width: 1000px) {
+  .desc {
+    display: none;
+  }
 }
 
 @media (max-width: 600px) {
   .status,
   .title {
-    font-size: 14px;
-  }
-  .deleteButton,
-  .desc {
-    display: none;
+    font-size: 16px;
   }
 }

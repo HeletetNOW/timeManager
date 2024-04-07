@@ -2,6 +2,11 @@ import { projectType } from "../../../types/types";
 
 import Style from "./TagItem.module.css";
 
+import editIcon from "../../../imgs/edit.svg";
+import cancelIcon from "../../../imgs/cancel.svg";
+import deleteIcon from "../../../imgs/deleteTag.svg";
+import checkMarkIcon from "../../../imgs/checkMark.svg";
+
 type Props = {
   handlerEditButton: (value: number) => void;
   setEditName: (value: string) => void;
@@ -30,46 +35,46 @@ export const TagItem = ({
 
   const buttonEdit = !isEdit ? (
     <button
-      className={Style.item}
+      className={`${Style.item} ${Style.editButton}`}
       type="button"
       onClick={() => {
         handlerEditButton(id);
       }}
     >
-      Изменить
+      <img src={editIcon} alt="" />
     </button>
   ) : null;
   const buttonApply = isEdit ? (
     <button
       type="button"
-      className={Style.item}
+      className={`${Style.item} ${Style.acceptButton}`}
       onClick={() => handlerAcceptButton(editName)}
     >
-      Сохранить
+      <img src={checkMarkIcon} alt="" />
     </button>
   ) : null;
   const buttonCancel = isEdit ? (
     <button
       type="button"
-      className={Style.cancelButton}
+      className={`${Style.cancelButton} ${Style.item}`}
       onClick={() => handlerAcceptButton("")}
     >
-      Отмена
+      <img src={cancelIcon} alt="" />
     </button>
   ) : null;
 
   const buttonDelete = !isEdit ? (
     <button
       type="button"
-      className={Style.deleteButton}
+      className={`${Style.deleteButton} ${Style.item}`}
       onClick={() => handlerDeleteButton(id)}
     >
-      Удалить
+      <img src={deleteIcon} alt="" />
     </button>
   ) : null;
 
   actionColumn = (
-    <div className={Style.actionButtons}>
+    <div className={Style.actionsButtons}>
       {buttonEdit}
       {buttonApply}
       {buttonCancel}
@@ -86,14 +91,18 @@ export const TagItem = ({
       />
     </div>
   ) : (
-    <div className={Style.title}> {tagName}</div>
+    <div className={Style.title}>{tagName}</div>
   );
 
   return (
     <div className={Style.container}>
-      <div className={Style.item}>{nameElement}</div>
-      <div className={Style.projects}>{children}</div>
-      {actionColumn}
+      {nameElement}
+      <div className={Style.actions}>
+        <button className={`${Style.projects} ${Style.item}`}>
+          {children}
+        </button>
+        {actionColumn}
+      </div>
     </div>
   );
 };

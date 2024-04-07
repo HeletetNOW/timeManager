@@ -1,11 +1,23 @@
 import { Link } from "react-router-dom";
 import Style from "./ProjectsItem.module.css";
 
+import acceptIcon from "../../../imgs/accept.svg";
+import noAcceptIcon from "../../../imgs/noAccept.svg";
+
+import cancelIcon from "../../../imgs/cancel.svg";
+import checkMarkIcon from "../../../imgs/checkMark.svg";
+import editIcon from "../../../imgs/edit.svg";
+import deleteProjectIcon from "../../../imgs/deleteProject.svg";
+
+import showMoreIcon from "../../../imgs/showMore.svg";
+import { TimersCount } from "../../Timers/TimersCount/TimersCount";
+
 type Props = {
   handlerEditButton: (value: number) => void;
   setEditName: (value: string) => void;
   handlerAcceptButton: (value: string) => void;
   handlerDeleteButton: (value: number) => void;
+  sumTime: number;
   editName: string;
   projectId: number;
   projectName: string;
@@ -23,6 +35,7 @@ export const ProjectItem = ({
   projectId,
   editName,
   subProjects,
+  sumTime,
   setEditName,
   handlerEditButton,
   handlerAcceptButton,
@@ -30,81 +43,83 @@ export const ProjectItem = ({
 }: Props) => {
   let actionColumn = null;
 
-  const windowWidth = window.innerWidth;
-
   const buttonEdit = !isEdit ? (
     <button
-      className={Style.item}
+      className={`${Style.item} ${Style.editButton}`}
       type="button"
       onClick={() => {
         handlerEditButton(projectId);
       }}
     >
-      Изменить
+      <img src={editIcon} alt="" />
     </button>
-  ) : null;
-  const buttonApply = isEdit ? (
+  ) : (
     <button
       type="button"
-      className={Style.item}
+      className={`${Style.item} ${Style.acceptButton}`}
       onClick={() => handlerAcceptButton(editName)}
     >
-      Сохранить
+      <img src={checkMarkIcon} alt="" />
     </button>
-  ) : null;
-  const buttonCancel = isEdit ? (
-    <button
-      type="button"
-      className={Style.item}
-      onClick={() => handlerAcceptButton("")}
-    >
-      Отмена
-    </button>
-  ) : null;
+  );
 
   const buttonDelete = !isEdit ? (
     <button
       type="button"
-      className={Style.item}
+      className={`${Style.item} ${Style.deleteButton}`}
       onClick={() => handlerDeleteButton(projectId)}
     >
-      Удалить
+      <img src={deleteProjectIcon} alt="" />
     </button>
-  ) : null;
+  ) : (
+    <button
+      type="button"
+      className={`${Style.item} ${Style.cancelButton}`}
+      onClick={() => handlerAcceptButton("")}
+    >
+      <img src={cancelIcon} alt="" />
+    </button>
+  );
 
   actionColumn = (
     <div className={Style.actionButtons}>
-      {windowWidth > 800 ? (
-        <>
-          <Link to={"/"} className={`${Style.item} ${Style.link}`}>
-            Подробнее...
-          </Link>
-          <div className={Style.edit}>{buttonEdit}</div>
-          <div className={Style.accept}>{buttonApply}</div>
-          <div className={Style.cancel}>{buttonCancel}</div>
-          <div className={Style.delete}>{buttonDelete}</div>
-        </>
-      ) : (
-        <></>
-      )}
+      <Link to={"/"} className={`${Style.item} ${Style.link}`}>
+        <img src={showMoreIcon} alt="" />
+      </Link>
+      <div className={Style.edit}>{buttonEdit}</div>
+      <div className={Style.delete}>{buttonDelete}</div>
     </div>
   );
 
   const nameElement = isEdit ? (
-    <div className={Style.textarea}>
-      <input
-        className={Style.input}
-        defaultValue={editName === "" ? projectName : editName}
-        onChange={(value) => setEditName(value.target.value)}
-      />
-    </div>
+    <input
+      defaultValue={editName === "" ? projectName : editName}
+      onChange={(value) => setEditName(value.target.value)}
+    />
   ) : (
-    <div className={Style.title}>{projectName}</div>
+    <div className={Style.title}>
+      <p>{projectName}</p>
+    </div>
   );
 
   return (
     <div className={Style.container}>
-      <div className={Style.item}>{nameElement}</div>
+      <div className={Style.info}>
+        <div className={Style.input}>{nameElement}</div>
+        <div className={Style.timersCount}>
+          <TimersCount
+            hours={Math.floor(sumTime / 3600)
+              .toString()
+              .padStart(2, "0")}
+            minutes={Math.floor((sumTime % 3600) / 60)
+              .toString()
+              .padStart(2, "0")}
+            seconds={Math.floor(sumTime % 60)
+              .toString()
+              .padStart(2, "0")}
+          />
+        </div>
+      </div>
       <div className={Style.content}>
         <div
           className={
@@ -113,12 +128,11 @@ export const ProjectItem = ({
               : `${Style.status} ${Style.statusFalse}`
           }
         >
-          {status ? "Выполнено" : "Не выполнено"}
+          <img src={status ? acceptIcon : noAcceptIcon} alt="" />
         </div>
-        <div className={Style.tags}>{tags}</div>
-        <div className={`${Style.projects} ${Style.subProjects}`}>
-          {subProjects}
-        </div>
+
+        <div className={`${Style.tags} ${Style.item}`}>{tags}</div>
+        <div className={`${Style.projects} ${Style.item}`}>{subProjects}</div>
         {actionColumn}
       </div>
     </div>

@@ -12,6 +12,7 @@ const createSubProject = async (req, res) => {
 
     const subProject = await prisma.subProject.create({
       data: {
+        sumTime: 0,
         subProjectName,
         description,
         projectId: Number(projectId),

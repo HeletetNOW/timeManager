@@ -26,6 +26,7 @@ CREATE TABLE "Timer" (
 CREATE TABLE "Project" (
     "id" SERIAL NOT NULL,
     "authorId" INTEGER NOT NULL,
+    "sumTime" INTEGER NOT NULL,
     "status" BOOLEAN NOT NULL,
     "projectName" TEXT NOT NULL,
     "description" TEXT NOT NULL,
@@ -40,6 +41,7 @@ CREATE TABLE "SubProject" (
     "subProjectName" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "projectId" INTEGER NOT NULL,
+    "sumTime" INTEGER NOT NULL,
 
     CONSTRAINT "SubProject_pkey" PRIMARY KEY ("id")
 );
@@ -60,7 +62,7 @@ CREATE TABLE "_ProjectToTag" (
 );
 
 -- CreateTable
-CREATE TABLE "_ProjectToTimer" (
+CREATE TABLE "_SubProjectToTimer" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
 );
@@ -78,10 +80,10 @@ CREATE UNIQUE INDEX "_ProjectToTag_AB_unique" ON "_ProjectToTag"("A", "B");
 CREATE INDEX "_ProjectToTag_B_index" ON "_ProjectToTag"("B");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_ProjectToTimer_AB_unique" ON "_ProjectToTimer"("A", "B");
+CREATE UNIQUE INDEX "_SubProjectToTimer_AB_unique" ON "_SubProjectToTimer"("A", "B");
 
 -- CreateIndex
-CREATE INDEX "_ProjectToTimer_B_index" ON "_ProjectToTimer"("B");
+CREATE INDEX "_SubProjectToTimer_B_index" ON "_SubProjectToTimer"("B");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_TagToTimer_AB_unique" ON "_TagToTimer"("A", "B");
@@ -108,10 +110,10 @@ ALTER TABLE "_ProjectToTag" ADD CONSTRAINT "_ProjectToTag_A_fkey" FOREIGN KEY ("
 ALTER TABLE "_ProjectToTag" ADD CONSTRAINT "_ProjectToTag_B_fkey" FOREIGN KEY ("B") REFERENCES "Tag"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_ProjectToTimer" ADD CONSTRAINT "_ProjectToTimer_A_fkey" FOREIGN KEY ("A") REFERENCES "Project"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_SubProjectToTimer" ADD CONSTRAINT "_SubProjectToTimer_A_fkey" FOREIGN KEY ("A") REFERENCES "SubProject"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_ProjectToTimer" ADD CONSTRAINT "_ProjectToTimer_B_fkey" FOREIGN KEY ("B") REFERENCES "Timer"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_SubProjectToTimer" ADD CONSTRAINT "_SubProjectToTimer_B_fkey" FOREIGN KEY ("B") REFERENCES "Timer"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_TagToTimer" ADD CONSTRAINT "_TagToTimer_A_fkey" FOREIGN KEY ("A") REFERENCES "Tag"("id") ON DELETE CASCADE ON UPDATE CASCADE;

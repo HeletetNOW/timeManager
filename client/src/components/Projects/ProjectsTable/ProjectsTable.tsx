@@ -53,39 +53,48 @@ export const ProjectsTable = React.memo(
     return (
       <div className={Style.container}>
         <div className={Style.content}>
-          <div
-            className={Style.sortForm}
-            onClick={() => toggleSortBy("projectName")}
-          >
-            <div className={Style.title}>Название</div>
-            {sortBy === "projectName" ? (
-              <img src={order === "asc" ? sortArrowDown : sortArrowUp} alt="" />
-            ) : (
-              <img src={sortArrowDown} alt="" />
-            )}
-          </div>
-          <div
-            className={Style.sortForm}
-            onClick={() => toggleSortBy("status")}
-          >
-            <div className={Style.title}>Статус</div>
-            {sortBy === "status" ? (
-              <img src={order === "asc" ? sortArrowDown : sortArrowUp} alt="" />
-            ) : (
-              <img src={sortArrowDown} alt="" />
-            )}
-          </div>
-          <div className={Style.sortForm}>
-            <div className={Style.title}>
-              <DropListForCreateForm
-                setShow={setIsShowTags}
-                setSelectedDate={setSelectedTags}
-                selectedDate={selectedTags}
-                dataType="tags"
-                isShow={IsShowTags}
-              />
+          <div className={Style.actions}>
+            <div
+              className={Style.sortForm}
+              onClick={() => toggleSortBy("projectName")}
+            >
+              <div className={Style.title}>Название</div>
+              {sortBy === "projectName" ? (
+                <img
+                  src={order === "asc" ? sortArrowDown : sortArrowUp}
+                  alt=""
+                />
+              ) : (
+                <img src={sortArrowDown} alt="" />
+              )}
+            </div>
+            <div
+              className={Style.sortForm}
+              onClick={() => toggleSortBy("status")}
+            >
+              <div className={Style.title}>Статус</div>
+              {sortBy === "status" ? (
+                <img
+                  src={order === "asc" ? sortArrowDown : sortArrowUp}
+                  alt=""
+                />
+              ) : (
+                <img src={sortArrowDown} alt="" />
+              )}
+            </div>
+            <div className={Style.sortForm}>
+              <div className={Style.title}>
+                <DropListForCreateForm
+                  setShow={setIsShowTags}
+                  setSelectedDate={setSelectedTags}
+                  selectedDate={selectedTags}
+                  dataType="tags"
+                  isShow={IsShowTags}
+                />
+              </div>
             </div>
           </div>
+
           <div className={Style.search}>
             <SearchElement
               inputTitle="Введите название проекта"

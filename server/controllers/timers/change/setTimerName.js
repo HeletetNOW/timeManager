@@ -13,10 +13,6 @@ const setTimerName = async (req, res) => {
     const updatedTimer = await prisma.timer.update({
       where: { id },
       data: { timerName },
-      include: {
-        tags: true,
-        projects: true,
-      },
     });
 
     return res.status(200).json(updatedTimer);

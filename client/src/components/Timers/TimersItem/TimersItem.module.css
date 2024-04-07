@@ -12,6 +12,7 @@
   align-items: center;
   flex-wrap: wrap;
   display: flex;
+  justify-content: center;
 }
 
 .actions div div button {
@@ -162,6 +163,7 @@
   }
 
   .container {
+    height: 120px;
     width: 100%;
     justify-content: center;
     flex-wrap: wrap;
@@ -199,11 +201,13 @@
     width: 200px;
   }
 
-  .container {
-    height: 120px;
-  }
-
   .setData {
     justify-content: center;
+  }
+}
+
+@media (max-width: 350px) {
+  .setData {
+    margin-top: 10px;
   }
 }

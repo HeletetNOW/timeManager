@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch } from "../../../hooks/hooks";
 import { SubProjectItem } from "../SubProjectItem/SubProjectItem";
 import {
@@ -64,6 +64,10 @@ export const SubProjectList = ({
     await dispatch(setSubProjectStatus(!subProjectStatus, subProjectId));
     await selectSubProjects();
   };
+
+  useEffect(() => {
+    selectSubProjects();
+  }, []);
 
   if (isShowSubProjects) {
     return (

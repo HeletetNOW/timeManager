@@ -5,6 +5,7 @@ export type tagType = {
 };
 
 export type subProjectType = {
+  sumTime: number;
   id: number;
   status: boolean;
   subProjectName: string;
@@ -15,6 +16,7 @@ export type subProjectType = {
 export type projectType = {
   id: number;
   status: boolean;
+  sumTime: number;
   projectName: string;
   description: string;
   subProjects: subProjectType[];
