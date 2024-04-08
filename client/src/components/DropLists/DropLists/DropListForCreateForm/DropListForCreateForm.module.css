@@ -25,6 +25,10 @@
   border-radius: 30px;
 }
 
+.main form input {
+  width: 200px;
+}
+
 .projects {
   padding: 5px;
   overflow-y: auto;

@@ -64,57 +64,59 @@ export const DropListForItem = ({
       </button>
       {isShow ? (
         <div className={Style.main}>
-          <form onSubmit={(event) => event.preventDefault()}>
-            <input
-              type="text"
-              placeholder={inputPlaceholder}
-              value={searchName}
-              onChange={(value) => setSearchName(value.target.value, dataId)}
-            />
-          </form>
-          <div className={Style.projects}>
-            {data.length > 0 ? (
-              dataType !== "subProjects" ? (
-                data.map((item) => (
-                  <DropElementForProjectsOrTags
-                    key={item.id}
-                    name={
-                      dataType === "projects"
-                        ? (item as projectType).projectName
-                        : (item as tagType).tagName
-                    }
-                    isConnected={item.isChecked}
-                    handlerSetSelected={() => {
-                      setSelect(dataId, item.id, item.isChecked);
-                    }}
-                  />
-                ))
+          <div className={Style.info}>
+            <form onSubmit={(event) => event.preventDefault()}>
+              <input
+                type="text"
+                placeholder={inputPlaceholder}
+                value={searchName}
+                onChange={(value) => setSearchName(value.target.value, dataId)}
+              />
+            </form>
+            <div className={Style.projects}>
+              {data.length > 0 ? (
+                dataType !== "subProjects" ? (
+                  data.map((item) => (
+                    <DropElementForProjectsOrTags
+                      key={item.id}
+                      name={
+                        dataType === "projects"
+                          ? (item as projectType).projectName
+                          : (item as tagType).tagName
+                      }
+                      isConnected={item.isChecked}
+                      handlerSetSelected={() => {
+                        setSelect(dataId, item.id, item.isChecked);
+                      }}
+                    />
+                  ))
+                ) : (
+                  data.map((item) => (
+                    <DropElementForSubProjects
+                      key={item.id}
+                      subProjects={
+                        (
+                          item as projectType & {
+                            subProjects: (subProjectType & {
+                              isChecked: boolean;
+                            })[];
+                          }
+                        ).subProjects
+                      }
+                      name={(item as projectType).projectName}
+                      handlerSetSelected={(
+                        isChecked: boolean,
+                        subProjectId: number
+                      ) => {
+                        setSelect(dataId, subProjectId, isChecked);
+                      }}
+                    />
+                  ))
+                )
               ) : (
-                data.map((item) => (
-                  <DropElementForSubProjects
-                    key={item.id}
-                    subProjects={
-                      (
-                        item as projectType & {
-                          subProjects: (subProjectType & {
-                            isChecked: boolean;
-                          })[];
-                        }
-                      ).subProjects
-                    }
-                    name={(item as projectType).projectName}
-                    handlerSetSelected={(
-                      isChecked: boolean,
-                      subProjectId: number
-                    ) => {
-                      setSelect(dataId, subProjectId, isChecked);
-                    }}
-                  />
-                ))
-              )
-            ) : (
-              <div className={Style.emptyData}>{emptyDataPlaceholder}</div>
-            )}
+                <div className={Style.emptyData}>{emptyDataPlaceholder}</div>
+              )}
+            </div>
           </div>
         </div>
       ) : null}

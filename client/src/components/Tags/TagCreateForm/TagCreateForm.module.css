@@ -76,10 +76,11 @@
   }
 
   .content {
-    justify-content: space-between;
+    justify-content: space-around;
     width: 100%;
   }
+
   .content div div {
-    top: 260px;
+    top: 270px;
   }
 }

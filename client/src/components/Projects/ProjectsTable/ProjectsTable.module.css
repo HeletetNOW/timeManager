@@ -10,7 +10,7 @@
 }
 
 .title {
-  position: relative;
+  /* position: relative; */
   font-size: 22px;
   font-weight: 400;
   padding-right: 5px;
@@ -37,7 +37,7 @@
 .sortForm {
   cursor: pointer;
   user-select: none;
-  position: relative;
+  /* position: relative; */
   display: flex;
   margin-right: 30px;
 }
@@ -72,18 +72,6 @@
   .sortForm {
     margin-right: 10px;
   }
-  /* .content {
-    flex-wrap: wrap;
-
-    height: 90px;
-    width: 98%;
-  }
-  .container {
-    height: 96px;
-  }
-  .search form input {
-    font-size: 14px;
-  } */
 }
 
 @media (max-width: 700px) {

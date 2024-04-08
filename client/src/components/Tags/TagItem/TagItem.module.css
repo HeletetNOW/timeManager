@@ -2,6 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
   padding: 0 25px;
   width: 90%;
   margin: 10px;
@@ -12,7 +13,6 @@
 
 .item {
   background-color: white;
-  position: relative;
   padding: 0px 20px;
   border: 0;
   height: 30px;
@@ -93,6 +93,12 @@
   .title,
   .textarea input {
     font-size: 16px;
+  }
+}
+
+@media (max-width: 700px) {
+  .projects div div div {
+    top: 100px;
   }
 }
 
