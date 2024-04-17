@@ -7,7 +7,7 @@ export const timersAPI = {
   },
   async createTimer(
     timerName: string,
-    tags?: { id: number }[]
+    tags?: number[]
   ): Promise<AxiosResponse> {
     return instance.post("/timers/add", { timerName, tags });
   },

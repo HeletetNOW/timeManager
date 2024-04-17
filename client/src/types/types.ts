@@ -2,6 +2,7 @@ export type tagType = {
   id: number;
   tagName: string;
   projects: projectType[];
+  timers: timerType[];
 };
 
 export type subProjectType = {
@@ -11,6 +12,7 @@ export type subProjectType = {
   subProjectName: string;
   description: string;
   project: projectType;
+  timers: timerType[];
 };
 
 export type projectType = {
@@ -32,5 +34,5 @@ export type timerType = {
   sumTime: number;
   addTimer: Date;
   tags: tagType[];
-  projects: projectType[];
+  subProjects: subProjectType[];
 };

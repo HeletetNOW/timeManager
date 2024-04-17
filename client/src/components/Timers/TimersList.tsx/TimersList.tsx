@@ -10,18 +10,24 @@ import {
   getSubProjectsBySelected,
   setSubProjectToTimer,
 } from "../../../store/timers/TimersActionCreator";
-import { timerType } from "../../../types/types";
+import { tagType, timerType } from "../../../types/types";
 import { DropListForItem } from "../../DropLists/DropLists/DropListForItem/DropListForItem";
 import { TimersItem } from "../TimersItem/TimersItem";
 import { timersSlice } from "../../../store/timers/TimersSlice";
 
 import Style from "./TimerList.module.css";
+import { getTags, selectTags } from "../../../store/tags/ActionCreators";
+import {
+  getProjects,
+  selectSubProjects,
+} from "../../../store/projects/ActionCreators";
 
 type Props = {
   timers: timerType[] | [];
+  selectedTags: tagType[] | [];
 };
 
-export const TimersList = ({ timers }: Props) => {
+export const TimersList = ({ timers, selectedTags }: Props) => {
   const [searcTagName, setSearchTagName] = useState("");
   const [searchProjectName, setSearchProjectName] = useState("");
   const [tags, setTags] = useState([]);
@@ -56,10 +62,20 @@ export const TimersList = ({ timers }: Props) => {
   };
 
   const handlerGetTagsByTimer = async (timerId: number, isShow: boolean) => {
-    setFetching(true);
-    setTags(await dispatch(getTagsBySelected(timerId, searcTagName)));
     setTimerShowProjects(0);
-    setTimerShowTags(isShow ? 0 : timerId);
+    setFetching(true);
+
+    if (isShow) {
+      setTimerShowTags(0);
+      setFetching(false);
+    } else {
+      await dispatch(getTags());
+
+      setTags(await dispatch(selectTags(searcTagName, timerId)));
+
+      setTimerShowTags(timerId);
+      setFetching(false);
+    }
   };
 
   const handlerGetSubProjectsByTimer = async (
@@ -67,20 +83,33 @@ export const TimersList = ({ timers }: Props) => {
     isShow: boolean
   ) => {
     setFetching(true);
-    setProjects(
-      await dispatch(getSubProjectsBySelected(timerId, searchProjectName))
-    );
     setTimerShowTags(0);
-    setTimerShowProjects(isShow ? 0 : timerId);
+
+    if (isShow) {
+      setTimerShowProjects(0);
+    } else {
+      await dispatch(getProjects());
+
+      setProjects(
+        await dispatch(selectSubProjects(timerId, searchProjectName))
+      );
+
+      setTimerShowProjects(timerId);
+    }
   };
 
   const handlerSetSearchProjectName = async (value: string, id: number) => {
     setSearchProjectName(value);
-    setProjects(await dispatch(getSubProjectsBySelected(id, value)));
+    setProjects(await dispatch(selectSubProjects(id, value)));
   };
 
   const handlerSetCurrentEditTimer = (id: number) => {
     dispatch(timersSlice.actions.setCurrentEditTimer(id));
+  };
+
+  const handlerSetSearchTagName = async (value: string, timerId: number) => {
+    setSearchTagName(value);
+    setTags(await dispatch(selectTags(value, timerId)));
   };
 
   const handlerSetTags = async (
@@ -88,10 +117,15 @@ export const TimersList = ({ timers }: Props) => {
     tagId: number,
     isChecked: boolean
   ) => {
+    setFetching(true);
+
     const action = isChecked ? "delete" : "add";
 
-    dispatch(setTagToTimer(id, tagId, action));
-    setTags(await dispatch(getTagsBySelected(id, searcTagName)));
+    await dispatch(setTagToTimer(id, tagId, action));
+    await dispatch(getTags());
+    setTags(await dispatch(selectTags(searcTagName, id)));
+
+    setFetching(false);
   };
 
   const handlerSetSubProjects = async (
@@ -103,9 +137,8 @@ export const TimersList = ({ timers }: Props) => {
     const action = isChecked ? "delete" : "add";
 
     await dispatch(setSubProjectToTimer(id, subProjectId, action));
-    setProjects(
-      await dispatch(getSubProjectsBySelected(id, searchProjectName))
-    );
+    await dispatch(getProjects());
+    setProjects(await dispatch(selectSubProjects(id, searchProjectName)));
     setFetching(false);
   };
 
@@ -155,7 +188,6 @@ export const TimersList = ({ timers }: Props) => {
                 timerControl={handlerControlTimer}
                 timerId={timer.id}
                 pauseTimer={timer.pauseTimer}
-                projects={timer.projects}
                 sumTime={timer.sumTime}
                 timerName={timer.timerName}
                 isEdit={isEdit}
@@ -163,7 +195,7 @@ export const TimersList = ({ timers }: Props) => {
                   <DropListForItem
                     setSelect={handlerSetTags}
                     searchName={searcTagName}
-                    setSearchName={setSearchTagName}
+                    setSearchName={handlerSetSearchTagName}
                     isShow={
                       timer.id === currentTimerIsShowTags &&
                       !currentTimerIsShowProjects

@@ -1,4 +1,6 @@
 const { prisma } = require("../../../prisma/prisma-client");
+const updateSumTimeSubProjects = require("../updateSumTimeSubProject");
+const updateSumTimeProjects = require("../updateSumTimeProjects");
 
 const endTimer = async (req, res) => {
   try {
@@ -34,6 +36,9 @@ const endTimer = async (req, res) => {
         pauseTimer: true,
       },
     });
+
+    await updateSumTimeSubProjects(id);
+    await updateSumTimeProjects(id);
 
     return res.status(200).json(timer);
   } catch (error) {

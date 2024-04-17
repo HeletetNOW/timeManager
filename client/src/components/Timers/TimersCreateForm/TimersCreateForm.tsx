@@ -10,7 +10,7 @@ export const TimersCreateForm = () => {
   const [timerName, setTimerName] = useState("");
 
   const [isShowTags, setShowTags] = useState(false);
-  const [selectedTags, setSelectedTags] = useState<{ id: number }[]>([]);
+  const [selectedTags, setSelectedTags] = useState<number[]>([]);
 
   const handlerCreateTimer = () => {
     dispatch(createTimer(timerName, selectedTags));

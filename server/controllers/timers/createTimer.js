@@ -4,6 +4,8 @@ const createTimer = async (req, res) => {
   try {
     const { timerName, tags = [] } = req.body;
 
+    console.log(tags);
+
     if (!timerName) {
       return res.status(400).json({ message: "Введите название таймера." });
     }
@@ -17,7 +19,7 @@ const createTimer = async (req, res) => {
         },
         tags: {
           connect: tags.map((tag) => ({
-            id: tag.id,
+            id: tag,
           })),
         },
         startTime: new Date(),

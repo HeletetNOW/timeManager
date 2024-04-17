@@ -2,6 +2,7 @@ import { projectsAPI } from "../../app/api/projectsAPI";
 import { tagsAPI } from "../../app/api/tagsAPI";
 import { timersAPI } from "../../app/api/timersAPI";
 import { projectType, subProjectType, tagType } from "../../types/types";
+import { projectsSlice } from "../projects/ProjectsSlice";
 import { AppDispatch, RootState } from "../store";
 import { timersSlice } from "./TimersSlice";
 
@@ -28,8 +29,7 @@ export const getTimers =
   };
 
 export const createTimer =
-  (timerName: string, tags?: { id: number }[]) =>
-  async (dispatch: AppDispatch) => {
+  (timerName: string, tags?: number[]) => async (dispatch: AppDispatch) => {
     try {
       dispatch(timersSlice.actions.timersFetching());
 
@@ -86,6 +86,25 @@ export const controlTimer =
     }
   };
 
+export const selectTags =
+  (tagName: string, tags: tagType[]) => (dispatch: AppDispatch) => {
+    try {
+      let selectDate = tags.filter((tag) =>
+        tag.tagName.toLocaleLowerCase().includes(tagName.toLocaleLowerCase())
+      );
+
+      dispatch(timersSlice.actions.setSelectedTags(selectDate));
+    } catch (error: any) {
+      console.log(error.response.data.message);
+      dispatch(
+        projectsSlice.actions.projectsFetchingError(
+          error.response?.data?.message
+        )
+      );
+      return error.response.status;
+    }
+  };
+
 export const getSubProjectsBySelected =
   (timerId: number, projectName: string) => async (dispatch: AppDispatch) => {
     try {
@@ -93,13 +112,7 @@ export const getSubProjectsBySelected =
         await projectsAPI.getSubProjects(timerId)
       ).data;
       let allData: projectType[] = (
-        await projectsAPI.getProjects(
-          undefined,
-          projectName,
-          "asc",
-          undefined,
-          undefined
-        )
+        await projectsAPI.getProjects(undefined, "asc", undefined, undefined)
       ).data;
 
       let result: (projectType & {

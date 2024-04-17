@@ -7,6 +7,7 @@ interface IProjectsState {
   isFailed: boolean;
   error: string;
   projects: projectType[] | [];
+  selectedProjects: projectType[] | [];
   currentEditProject: number | null;
   currentSearchProject: string;
   currentProjectIsShowTags: number;
@@ -25,6 +26,7 @@ const initialState: IProjectsState = {
   currentProjectIsShowTags: 0,
   currentProjectIsShowSubProjects: 0,
   projects: [],
+  selectedProjects: [],
 };
 
 export const projectsSlice = createSlice({
@@ -50,6 +52,13 @@ export const projectsSlice = createSlice({
       state.error = "";
       state.isFetching = false;
       state.projects = action.payload;
+      state.currentEditProject = null;
+    },
+    setSelectedProjects(state, action) {
+      state.isFailed = false;
+      state.error = "";
+      state.isFetching = false;
+      state.selectedProjects = action.payload;
       state.currentEditProject = null;
     },
     setOrderToDesc(state) {

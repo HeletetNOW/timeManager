@@ -11,9 +11,9 @@ import { getTags } from "../../../../store/tags/ActionCreators";
 import { DropElementForProjectsOrTags } from "../../DropElement/DropElementForProjectsOrTags";
 
 type Props = {
-  setSelectedDate: (date: { id: number }[]) => void;
+  setSelectedDate: (date: number[]) => void;
   setShow: (value: boolean) => void;
-  selectedDate: { id: number }[];
+  selectedDate: number[];
   isShow: boolean;
   dataType: "tags" | "projects";
 };
@@ -35,7 +35,7 @@ export const DropListForCreateForm = ({
   const requestData = useCallback(
     async (dataType: string, searchValue: string) => {
       if (dataType === "projects") {
-        return (await dispatch(getProjects(undefined, searchValue))).data;
+        return (await dispatch(getProjects(undefined))).data;
       } else if (dataType === "tags") {
         return (await dispatch(getTags(searchValue))).data;
       }
@@ -49,10 +49,10 @@ export const DropListForCreateForm = ({
         dateItem.id === dateId ? { ...dateItem, isChecked: true } : dateItem
       );
       setData(updatedData);
-      setSelectedDate([...selectedDate, { id: dateId }]);
+      setSelectedDate([...selectedDate, dateId]);
     } else if (isChecked) {
       let filteredNumbers = selectedDate.filter(
-        (dateItem) => dateItem.id !== dateId
+        (dateItem) => dateItem !== dateId
       );
       setSelectedDate([...filteredNumbers]);
     }
@@ -61,9 +61,7 @@ export const DropListForCreateForm = ({
   const handlerRequestData = useCallback(async () => {
     const allData = await requestData(dataType, searchValue);
 
-    selectedDate.sort((a: { id: number }, b: { id: number }) =>
-      a.id > b.id ? -1 : 1
-    );
+    selectedDate.sort((a: number, b: number) => (a > b ? -1 : 1));
 
     let result: ((projectType | tagType) & { isChecked: boolean })[] = [];
 
@@ -79,7 +77,7 @@ export const DropListForCreateForm = ({
 
       if (
         localSelectedDate.length > 0 &&
-        item.id === localSelectedDate[localSelectedDate.length - 1].id
+        item.id === localSelectedDate[localSelectedDate.length - 1]
       ) {
         itemWithChecked.isChecked = true;
         localSelectedDate.pop();

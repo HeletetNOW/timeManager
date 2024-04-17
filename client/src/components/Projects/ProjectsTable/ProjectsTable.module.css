@@ -10,7 +10,7 @@
 }
 
 .title {
-  /* position: relative; */
+  position: relative;
   font-size: 22px;
   font-weight: 400;
   padding-right: 5px;

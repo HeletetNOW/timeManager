@@ -1,15 +1,11 @@
 import { useAppDispatch } from "../../../hooks/hooks";
-import {
-  getProjectsByTags,
-  setOrder,
-} from "../../../store/projects/ActionCreators";
+import { selectProject } from "../../../store/projects/ActionCreators";
 import Style from "./ProjectsTable.module.css";
 
 import sortArrowUp from "../../../imgs/sortArrowUp.svg";
 import sortArrowDown from "../../../imgs/sortArrowDown.svg";
 import { SearchElement } from "../../SearchElement/SearchElement";
 import React, { useEffect, useState } from "react";
-import { getProjects } from "../../../store/projects/ActionCreators";
 import { projectsSlice } from "../../../store/projects/ProjectsSlice";
 import { DropListForCreateForm } from "../../DropLists/DropLists/DropListForCreateForm/DropListForCreateForm";
 
@@ -25,29 +21,30 @@ export const ProjectsTable = React.memo(
 
     const setInputValue = (value: string) => {
       dispatch(projectsSlice.actions.setCurrentSearchProjects(value));
-      dispatch(getProjects());
+      dispatch(selectProject(value));
     };
 
     const onSubmitInput = (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       event.currentTarget.blur();
-      dispatch(getProjects());
-    };
-
-    const toggleSortOrder = () => {
-      dispatch(setOrder());
+      dispatch(selectProject(currentSearchProject));
     };
 
     const toggleSortBy = (sortBy: "projectName" | "status" | "") => {
       dispatch(projectsSlice.actions.setSortBy(sortBy));
-      toggleSortOrder();
+      if (order === "asc") {
+        dispatch(projectsSlice.actions.setOrderToDesc());
+      } else if (order === "desc") {
+        dispatch(projectsSlice.actions.setOrderToAsc());
+      }
+      dispatch(selectProject(currentSearchProject));
     };
 
-    const [selectedTags, setSelectedTags] = useState<{ id: number }[]>([]);
+    const [selectedTags, setSelectedTags] = useState<number[]>([]);
     const [IsShowTags, setIsShowTags] = useState(false);
 
     useEffect(() => {
-      dispatch(getProjectsByTags(selectedTags));
+      dispatch(selectProject(currentSearchProject, selectedTags));
     }, [selectedTags, IsShowTags, dispatch]);
 
     return (

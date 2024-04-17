@@ -11,10 +11,7 @@ export const tagsAPI = {
   ): Promise<AxiosResponse> {
     return instance.post("/tags", { id, order, tagName, projectId, timerId });
   },
-  async addTag(
-    tagName: string,
-    projects: { id: number }[]
-  ): Promise<AxiosResponse> {
+  async addTag(tagName: string, projects: number[]): Promise<AxiosResponse> {
     return instance.post("/tags/add", { tagName, projects });
   },
   async deleteTag(id: number): Promise<AxiosResponse> {

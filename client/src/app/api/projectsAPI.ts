@@ -3,8 +3,7 @@ import instance from "../instances";
 
 export const projectsAPI = {
   async getProjects(
-    tagId?: { id: number }[],
-    projectName?: string,
+    tagId?: number[],
     order?: string,
     id?: number,
     sortBy?: string
@@ -13,7 +12,6 @@ export const projectsAPI = {
       sortBy,
       id,
       order,
-      projectName,
       tagId,
     });
   },
@@ -22,7 +20,7 @@ export const projectsAPI = {
   },
   async createProject(
     projectName: string,
-    tags?: { id: number }[]
+    tags?: number[]
   ): Promise<AxiosResponse> {
     return instance.post("/projects/create", {
       projectName,

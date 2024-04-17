@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { timerType } from "../../types/types";
+import { tagType, timerType } from "../../types/types";
 
 interface ITimersState {
   isFetching: boolean;
@@ -7,6 +7,7 @@ interface ITimersState {
   error: string;
   selectDate: number;
   timers: timerType[] | [];
+  selectedTags: tagType[] | [];
   currentEditTimer: number;
   currentTimerIsShowTags: number;
   currentTimerIsShowProjects: number;
@@ -14,6 +15,7 @@ interface ITimersState {
 
 const initialState: ITimersState = {
   selectDate: new Date().getTime(),
+  selectedTags: [],
   currentEditTimer: 0,
   isFetching: false,
   isFailed: false,
@@ -59,6 +61,13 @@ export const timersSlice = createSlice({
     },
     setSelectDate(state, action) {
       state.selectDate = action.payload;
+    },
+    setSelectedTags(state, action) {
+      state.isFailed = false;
+      state.error = "";
+      state.isFetching = false;
+      state.selectedTags = action.payload;
+      state.currentEditTimer = 0;
     },
   },
 });

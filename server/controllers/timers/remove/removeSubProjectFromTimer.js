@@ -1,5 +1,6 @@
 const { prisma } = require("../../../prisma/prisma-client");
-const updateSumTimeProjects = require("../add/updateSumTimeProjects");
+const updateSumTimeProjects = require("../updateSumTimeProjects");
+const updateSumTimeSubProjects = require("../updateSumTimeSubProject");
 
 const removeSubProjectFromTimer = async (req, res) => {
   try {
@@ -24,18 +25,8 @@ const removeSubProjectFromTimer = async (req, res) => {
       },
     });
 
-    let oldSubProject = await prisma.subProject.findFirst({
-      where: { id: subProjectId },
-    });
-
-    await prisma.subProject.update({
-      where: { id: subProjectId },
-      data: {
-        sumTime: oldSubProject.sumTime - removedProject.sumTime,
-      },
-    });
-
-    await updateSumTimeProjects(subProjectId);
+    await updateSumTimeSubProjects(id, subProjectId);
+    await updateSumTimeProjects(id, subProjectId);
 
     return res.status(200).json(removedProject);
   } catch (error) {

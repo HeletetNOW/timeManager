@@ -21,7 +21,7 @@ const sort = async (id, order, projectId, timerId, maybeTagName, authorId) => {
         tagName: order,
       },
       where: where,
-      include: { projects: true },
+      include: { projects: true, timers: true },
     });
 
     return data;

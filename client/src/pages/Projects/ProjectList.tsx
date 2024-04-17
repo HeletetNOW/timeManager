@@ -33,6 +33,7 @@ export const ProjectList = () => {
     currentEditProject,
     currentSearchProject,
     currentProjectIsShowTags,
+    selectedProjects,
   } = useAppSelector((state) => state.projectsReducer);
 
   const handlerEditButton = (id: number) => {
@@ -103,58 +104,60 @@ export const ProjectList = () => {
       <ProjectCreateForm />
       <div className={Style.projectsContainer}>
         <div className={Style.projects}>
-          {projects.map((project) => {
-            const isEdit: boolean = project.id === currentEditProject;
-            const isShowSubProjects: boolean =
-              project.id === currentProjectIsShowSubProjects;
-            return (
-              <div className={isFetching ? Style.isFetching : ""}>
-                <ProjectItem
-                  handlerEditButton={handlerEditButton}
-                  setEditName={setEditName}
-                  handlerAcceptButton={handlerAcceptButton}
-                  handlerDeleteButton={handlerDeleteButton}
-                  editName={editName}
-                  sumTime={project.sumTime}
-                  status={project.status}
-                  projectId={project.id}
-                  projectName={project.projectName}
-                  isEdit={isEdit}
-                  key={project.id}
-                  tags={
-                    <DropListForItem
-                      setSelect={handlerSetTag}
-                      searchName={searchProjectName}
-                      setSearchName={handlerSetSearchProjectName}
-                      isShow={
-                        project.id === currentProjectIsShowTags ? true : false
-                      }
-                      handlerGetData={handlerGetTagsByProject}
-                      dataType="tags"
-                      dataId={project.id}
-                      data={data}
-                    />
-                  }
-                  subProjects={
-                    <SubProjectShowList
-                      isShowSubProjects={isShowSubProjects}
-                      setShowSubProject={setShowSubProject}
-                      projectId={project.id}
-                      isFetching={isFetching}
-                    />
-                  }
-                />
-                <div className={Style.projectList}>
-                  <SubProjectList
-                    isShowSubProjects={isShowSubProjects}
-                    isFetching={isFetching}
-                    setFetching={setFetching}
+          {(currentSearchProject === "" ? projects : selectedProjects).map(
+            (project) => {
+              const isEdit: boolean = project.id === currentEditProject;
+              const isShowSubProjects: boolean =
+                project.id === currentProjectIsShowSubProjects;
+              return (
+                <div className={isFetching ? Style.isFetching : ""}>
+                  <ProjectItem
+                    handlerEditButton={handlerEditButton}
+                    setEditName={setEditName}
+                    handlerAcceptButton={handlerAcceptButton}
+                    handlerDeleteButton={handlerDeleteButton}
+                    editName={editName}
+                    sumTime={project.sumTime}
+                    status={project.status}
                     projectId={project.id}
+                    projectName={project.projectName}
+                    isEdit={isEdit}
+                    key={project.id}
+                    tags={
+                      <DropListForItem
+                        setSelect={handlerSetTag}
+                        searchName={searchProjectName}
+                        setSearchName={handlerSetSearchProjectName}
+                        isShow={
+                          project.id === currentProjectIsShowTags ? true : false
+                        }
+                        handlerGetData={handlerGetTagsByProject}
+                        dataType="tags"
+                        dataId={project.id}
+                        data={data}
+                      />
+                    }
+                    subProjects={
+                      <SubProjectShowList
+                        isShowSubProjects={isShowSubProjects}
+                        setShowSubProject={setShowSubProject}
+                        projectId={project.id}
+                        isFetching={isFetching}
+                      />
+                    }
                   />
+                  <div className={Style.projectList}>
+                    <SubProjectList
+                      isShowSubProjects={isShowSubProjects}
+                      isFetching={isFetching}
+                      setFetching={setFetching}
+                      projectId={project.id}
+                    />
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            }
+          )}
         </div>
       </div>
     </div>

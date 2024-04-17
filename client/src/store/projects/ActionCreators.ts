@@ -1,19 +1,18 @@
+import { resourceUsage } from "process";
 import { projectsAPI } from "../../app/api/projectsAPI";
-import { projectType } from "../../types/types";
+import { projectType, subProjectType } from "../../types/types";
 import { AppDispatch, RootState } from "../store";
 import { projectsSlice } from "./ProjectsSlice";
 
 export const getProjects =
-  (id?: number, projectName?: string) =>
-  async (dispatch: AppDispatch, getSate: () => RootState) => {
+  (id?: number) => async (dispatch: AppDispatch, getSate: () => RootState) => {
     try {
       dispatch(projectsSlice.actions.projectsFetching());
 
-      const { currentSearchProject, order, sortBy } = getSate().projectsReducer;
+      const { order, sortBy } = getSate().projectsReducer;
 
       const result = await projectsAPI.getProjects(
         undefined,
-        projectName ? projectName : currentSearchProject,
         order,
         id,
         sortBy
@@ -119,38 +118,8 @@ export const deleteSubProject =
     }
   };
 
-export const getProjectsByTags =
-  (id: { id: number }[]) =>
-  async (dispatch: AppDispatch, getSate: () => RootState) => {
-    try {
-      dispatch(projectsSlice.actions.projectsFetching());
-
-      const { currentSearchProject, order, sortBy } = getSate().projectsReducer;
-
-      const result = await projectsAPI.getProjects(
-        id,
-        currentSearchProject,
-        order,
-        undefined,
-        sortBy
-      );
-
-      dispatch(projectsSlice.actions.setProjects(result.data));
-      return result;
-    } catch (error: any) {
-      console.log(error.response.data.message);
-      dispatch(
-        projectsSlice.actions.projectsFetchingError(
-          error.response?.data?.message
-        )
-      );
-      return error.response.status;
-    }
-  };
-
 export const createProject =
-  (projectName: string, tags: { id: number }[]) =>
-  async (dispatch: AppDispatch) => {
+  (projectName: string, tags: number[]) => async (dispatch: AppDispatch) => {
     try {
       dispatch(projectsSlice.actions.projectsFetching());
 
@@ -170,41 +139,6 @@ export const createProject =
     }
   };
 
-export const setOrder =
-  () => async (dispatch: AppDispatch, getSate: () => RootState) => {
-    try {
-      dispatch(projectsSlice.actions.projectsFetching());
-
-      let { order, currentSearchProject, sortBy } = getSate().projectsReducer;
-
-      if (order === "desc") {
-        dispatch(projectsSlice.actions.setOrderToAsc());
-        order = "asc";
-      } else if (order === "asc") {
-        dispatch(projectsSlice.actions.setOrderToDesc());
-        order = "desc";
-      }
-
-      const result = await projectsAPI.getProjects(
-        undefined,
-        currentSearchProject,
-        order,
-        undefined,
-        sortBy
-      );
-      dispatch(projectsSlice.actions.setProjects(result.data));
-
-      dispatch(projectsSlice.actions.projectsFetchingSuccess());
-    } catch (error: any) {
-      dispatch(
-        projectsSlice.actions.projectsFetchingError(
-          error.response?.data?.message
-        )
-      );
-      return error.response.status;
-    }
-  };
-
 export const getProjectByTagIdSelected =
   (tagId: number, projectName: string | undefined) =>
   async (dispatch: AppDispatch) => {
@@ -212,9 +146,8 @@ export const getProjectByTagIdSelected =
       dispatch(projectsSlice.actions.projectsFetching());
       let allProjects = (await projectsAPI.getProjects(undefined, projectName))
         .data;
-      let selectionProjects = (
-        await projectsAPI.getProjects([{ id: tagId }], projectName, "asc")
-      ).data;
+      let selectionProjects = (await projectsAPI.getProjects([tagId], "asc"))
+        .data;
 
       let result: (projectType & { isChecked: boolean })[] = [];
 
@@ -329,3 +262,114 @@ export const deleteProject = (id: number) => async (dispatch: AppDispatch) => {
     return error.response.status;
   }
 };
+
+export const selectProject =
+  (projectName?: string, selectTags?: number[]) =>
+  (dispatch: AppDispatch, getSate: () => RootState) => {
+    try {
+      const { projects, order, sortBy, currentSearchProject } =
+        getSate().projectsReducer;
+
+      const searchProject = projectName ? projectName : currentSearchProject;
+
+      let selectDate = projects.filter((project) =>
+        project.projectName
+          .toLocaleLowerCase()
+          .includes(searchProject.toLocaleLowerCase())
+      );
+
+      if (sortBy === "projectName") {
+        selectDate = selectDate.sort((a, b) =>
+          a.projectName.localeCompare(b.projectName)
+        );
+      } else if (sortBy === "status") {
+        selectDate = selectDate.sort(
+          (a, b) => (a.status ? -1 : 1) - (b.status ? -1 : 1)
+        );
+      }
+
+      if (selectTags) {
+        selectDate = selectDate.filter((project) => {
+          return project.tags.some((tag) => selectTags.includes(tag.id));
+        });
+      }
+
+      if (order === "asc") {
+        selectDate = selectDate.reverse();
+      }
+
+      dispatch(projectsSlice.actions.setSelectedProjects(selectDate));
+    } catch (error: any) {
+      console.log(error.response.data.message);
+      dispatch(
+        projectsSlice.actions.projectsFetchingError(
+          error.response?.data?.message
+        )
+      );
+      return error.response.status;
+    }
+  };
+
+export const selectSubProjects =
+  (timerId: number, projectName: string) =>
+  async (dispatch: AppDispatch, getSate: () => RootState) => {
+    try {
+      const { projects } = getSate().projectsReducer;
+
+      let allProjects = projects.filter((project) =>
+        project.projectName
+          .toLocaleLowerCase()
+          .includes(projectName.toLocaleLowerCase())
+      );
+
+      let selectedProjects = allProjects
+        .map((project) => {
+          return {
+            ...project,
+            subProjects: project.subProjects.filter((subProject) =>
+              subProject.timers.some((timer) => timer.id === timerId)
+            ),
+          };
+        })
+        .filter((project) => project.subProjects.length > 0);
+
+      let result: (projectType & {
+        subProjects: (subProjectType & { isChecked: boolean })[];
+      })[] = [];
+
+      allProjects.map((project) => {
+        let updatedItem: projectType & {
+          subProjects: (subProjectType & { isChecked: boolean })[];
+        } = {
+          ...project,
+          subProjects: project.subProjects
+            .map((subProject) => {
+              return {
+                ...subProject,
+                isChecked: selectedProjects.some((projectSelected) => {
+                  return projectSelected.subProjects.some(
+                    (subProjectSelected) =>
+                      subProjectSelected.id === subProject.id
+                  );
+                }),
+              };
+            })
+            .sort((a, b) => Number(a.isChecked) - Number(b.isChecked)),
+        };
+
+        result.push(updatedItem);
+      });
+
+      result.sort((a, b) => a.id - b.id);
+
+      return result;
+    } catch (error: any) {
+      console.log(error.response.data.message);
+      dispatch(
+        projectsSlice.actions.projectsFetchingError(
+          error.response?.data?.message
+        )
+      );
+      return error.response.status;
+    }
+  };

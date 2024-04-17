@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { projectType } from "../../../types/types";
+import { projectType, subProjectType } from "../../../types/types";
 import { TimersCount } from "../TimersCount/TimersCount";
 
 import Style from "./TimersItem.module.css";
@@ -26,7 +26,6 @@ type Props = {
   isEdit: boolean;
   timerId: number;
   pauseTimer: boolean;
-  projects: projectType[];
   sumTime: number;
   timerName: string;
   tagsList: React.ReactComponentElement<any>;

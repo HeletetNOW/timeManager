@@ -9,7 +9,7 @@ export const ProjectCreateForm = React.memo(() => {
   const dispatch = useAppDispatch();
 
   const [createInputValue, setCreateInputValue] = useState("");
-  const [selectedTags, setSelectedTags] = useState<{ id: number }[]>([]);
+  const [selectedTags, setSelectedTags] = useState<number[]>([]);
   const [IsShowTags, setIsShowTags] = useState(false);
 
   const handlerCreateProject = async () => {

@@ -125,8 +125,7 @@ export const setProjectToTag =
   };
 
 export const createTag =
-  (tagName: string, projectsId: { id: number }[]) =>
-  async (dispatch: AppDispatch) => {
+  (tagName: string, projectsId: number[]) => async (dispatch: AppDispatch) => {
     try {
       dispatch(tagsSlice.actions.tagsFetching());
 
@@ -174,6 +173,51 @@ export const getTagsByProjectIdSelected =
       });
 
       dispatch(tagsSlice.actions.tagsFetchingSuccess());
+      return result;
+    } catch (error: any) {
+      console.log(error.response.data.message);
+      dispatch(
+        tagsSlice.actions.tagsFetchingError(error.response?.data?.message)
+      );
+      return error.response.status;
+    }
+  };
+
+export const selectTags =
+  (tagName: string, timerId: number) =>
+  async (dispatch: AppDispatch, getSate: () => RootState) => {
+    try {
+      const { tags } = getSate().tagsReducer;
+
+      let allTags = tags.filter((tag) =>
+        tag.tagName.toLocaleLowerCase().includes(tagName.toLocaleLowerCase())
+      );
+
+      let selectedTags = allTags.filter((tag) =>
+        tag.timers.find((timer) => timer.id === timerId)
+      );
+
+      let result: (tagType & { isChecked: boolean })[] = [];
+
+      allTags = allTags.sort((a, b) => a.id - b.id);
+      selectedTags.sort((a: tagType, b: tagType) => (a.id > b.id ? -1 : 1));
+
+      allTags.forEach((item: tagType) => {
+        const itemWithChecked: Partial<tagType> & { isChecked: boolean } = {
+          ...item,
+          isChecked: false,
+        };
+
+        if (
+          selectedTags.length > 0 &&
+          item.id === selectedTags[selectedTags.length - 1].id
+        ) {
+          itemWithChecked.isChecked = true;
+          selectedTags.pop();
+        }
+        result.push(itemWithChecked as tagType & { isChecked: boolean });
+      });
+
       return result;
     } catch (error: any) {
       console.log(error.response.data.message);
