@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import { currentAuth } from "./store/auth/ActionCreators";
 
 export const App = () => {
-  const { isFetching } = useAppSelector((state) => state.authReducer);
+  const { isFetching, userInfo } = useAppSelector((state) => state.authReducer);
   const dispatch = useAppDispatch();
 
   useEffect(() => {

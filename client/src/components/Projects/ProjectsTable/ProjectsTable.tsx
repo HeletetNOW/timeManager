@@ -1,54 +1,70 @@
 import { useAppDispatch } from "../../../hooks/hooks";
-import { selectProject } from "../../../store/projects/ActionCreators";
+import {
+  selectProject,
+  setSortProjects,
+} from "../../../store/projects/ActionCreators";
 import Style from "./ProjectsTable.module.css";
 
 import sortArrowUp from "../../../imgs/sortArrowUp.svg";
 import sortArrowDown from "../../../imgs/sortArrowDown.svg";
 import { SearchElement } from "../../SearchElement/SearchElement";
 import React, { useEffect, useState } from "react";
-import { projectsSlice } from "../../../store/projects/ProjectsSlice";
 import { DropListForCreateForm } from "../../DropLists/DropLists/DropListForCreateForm/DropListForCreateForm";
 
 type Props = {
   order: "desc" | "asc";
   currentSearchProject: string;
   sortBy: "projectName" | "status" | "";
+  isFetching: boolean;
+  setFetching: (value: boolean) => void;
+  setSearchProjectName: (value: string) => void;
 };
 
 export const ProjectsTable = React.memo(
-  ({ order, currentSearchProject, sortBy }: Props) => {
+  ({
+    order,
+    currentSearchProject,
+    sortBy,
+    setFetching,
+    isFetching,
+    setSearchProjectName,
+  }: Props) => {
     const dispatch = useAppDispatch();
-
-    const setInputValue = (value: string) => {
-      dispatch(projectsSlice.actions.setCurrentSearchProjects(value));
-      dispatch(selectProject(value));
-    };
-
-    const onSubmitInput = (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      event.currentTarget.blur();
-      dispatch(selectProject(currentSearchProject));
-    };
-
-    const toggleSortBy = (sortBy: "projectName" | "status" | "") => {
-      dispatch(projectsSlice.actions.setSortBy(sortBy));
-      if (order === "asc") {
-        dispatch(projectsSlice.actions.setOrderToDesc());
-      } else if (order === "desc") {
-        dispatch(projectsSlice.actions.setOrderToAsc());
-      }
-      dispatch(selectProject(currentSearchProject));
-    };
 
     const [selectedTags, setSelectedTags] = useState<number[]>([]);
     const [IsShowTags, setIsShowTags] = useState(false);
 
+    const onSubmitInput = (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      event.currentTarget.blur();
+      setSearchProjectName(currentSearchProject);
+    };
+
+    const toggleSortBy = (sort: "projectName" | "status" | "") => {
+      setFetching(true);
+      dispatch(setSortProjects(sort));
+      setFetching(false);
+    };
+
     useEffect(() => {
       dispatch(selectProject(currentSearchProject, selectedTags));
-    }, [selectedTags, IsShowTags, dispatch]);
+    }, [
+      selectedTags,
+      IsShowTags,
+      currentSearchProject,
+      order,
+      sortBy,
+      dispatch,
+    ]);
 
     return (
-      <div className={Style.container}>
+      <div
+        className={
+          isFetching
+            ? `${Style.container} ${Style.isFetching}`
+            : `${Style.container}`
+        }
+      >
         <div className={Style.content}>
           <div className={Style.actions}>
             <div
@@ -84,7 +100,7 @@ export const ProjectsTable = React.memo(
                 <DropListForCreateForm
                   setShow={setIsShowTags}
                   setSelectedDate={setSelectedTags}
-                  selectedDate={selectedTags}
+                  selectedData={selectedTags}
                   dataType="tags"
                   isShow={IsShowTags}
                 />
@@ -95,7 +111,7 @@ export const ProjectsTable = React.memo(
           <div className={Style.search}>
             <SearchElement
               inputTitle="Введите название проекта"
-              onChangeInput={setInputValue}
+              onChangeInput={setSearchProjectName}
               inputValue={currentSearchProject}
               onSubmitInput={onSubmitInput}
             />

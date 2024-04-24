@@ -46,6 +46,7 @@ export const DropListForItem = ({
     emptyDataPlaceholder = "Тегов пока нет";
     inputPlaceholder += "тега";
   }
+
   return (
     <div className={Style.container}>
       <button

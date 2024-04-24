@@ -11,11 +11,10 @@ export const loginAuth =
       dispatch(authSlice.actions.setUserInfo(result.data));
 
       dispatch(authSlice.actions.authFetchingSuccess());
-      return result;
+      return result.status;
     } catch (error: any) {
-      dispatch(
-        authSlice.actions.authFetchingError(error.response?.data?.message)
-      );
+      console.log(error.response.data.message);
+      return error.response.status;
     }
   };
 
@@ -29,11 +28,10 @@ export const registerAuth =
       dispatch(authSlice.actions.setUserInfo(result.data));
 
       dispatch(authSlice.actions.authFetchingSuccess());
-      return result;
+      return result.status;
     } catch (error: any) {
-      dispatch(
-        authSlice.actions.authFetchingError(error.response?.data?.message)
-      );
+      console.log(error.response.data.message);
+      return error.response.status;
     }
   };
 
@@ -48,11 +46,9 @@ export const currentAuth = () => async (dispatch: AppDispatch) => {
 
     return result.status;
   } catch (error: any) {
-    console.log(error.response.data.message);
-    dispatch(
-      authSlice.actions.authFetchingError(error.response?.data?.message)
-    );
     dispatch(authSlice.actions.setUserInfo(null));
+    dispatch(authSlice.actions.authFetchingSuccess());
+    console.log(error.response.data.message);
     return error.response.status;
   }
 };

@@ -1,14 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import {
   controlTimer,
   deleteTimer,
-  getTagsBySelected,
   setTagToTimer,
   setSumTime,
   setTimerName,
-  getSubProjectsBySelected,
   setSubProjectToTimer,
+  getTimers,
 } from "../../../store/timers/TimersActionCreator";
 import { tagType, timerType } from "../../../types/types";
 import { DropListForItem } from "../../DropLists/DropLists/DropListForItem/DropListForItem";
@@ -16,7 +15,10 @@ import { TimersItem } from "../TimersItem/TimersItem";
 import { timersSlice } from "../../../store/timers/TimersSlice";
 
 import Style from "./TimerList.module.css";
-import { getTags, selectTags } from "../../../store/tags/ActionCreators";
+import {
+  getTags,
+  selectTagsWitchCheked,
+} from "../../../store/tags/ActionCreators";
 import {
   getProjects,
   selectSubProjects,
@@ -24,7 +26,7 @@ import {
 
 type Props = {
   timers: timerType[] | [];
-  selectedTags: tagType[] | [];
+  selectedTags: tagType[] | null;
 };
 
 export const TimersList = ({ timers, selectedTags }: Props) => {
@@ -49,6 +51,7 @@ export const TimersList = ({ timers, selectedTags }: Props) => {
   ) => {
     setFetching(true);
     await dispatch(controlTimer(timerId, action));
+    await dispatch(getTimers());
     setFetching(false);
   };
 
@@ -69,9 +72,9 @@ export const TimersList = ({ timers, selectedTags }: Props) => {
       setTimerShowTags(0);
       setFetching(false);
     } else {
-      await dispatch(getTags());
-
-      setTags(await dispatch(selectTags(searcTagName, timerId)));
+      setTags(
+        await dispatch(selectTagsWitchCheked(searcTagName, timerId, "timer"))
+      );
 
       setTimerShowTags(timerId);
       setFetching(false);
@@ -88,8 +91,6 @@ export const TimersList = ({ timers, selectedTags }: Props) => {
     if (isShow) {
       setTimerShowProjects(0);
     } else {
-      await dispatch(getProjects());
-
       setProjects(
         await dispatch(selectSubProjects(timerId, searchProjectName))
       );
@@ -109,7 +110,7 @@ export const TimersList = ({ timers, selectedTags }: Props) => {
 
   const handlerSetSearchTagName = async (value: string, timerId: number) => {
     setSearchTagName(value);
-    setTags(await dispatch(selectTags(value, timerId)));
+    setTags(await dispatch(selectTagsWitchCheked(value, timerId, "timer")));
   };
 
   const handlerSetTags = async (
@@ -123,7 +124,7 @@ export const TimersList = ({ timers, selectedTags }: Props) => {
 
     await dispatch(setTagToTimer(id, tagId, action));
     await dispatch(getTags());
-    setTags(await dispatch(selectTags(searcTagName, id)));
+    setTags(await dispatch(selectTagsWitchCheked(searcTagName, id, "timer")));
 
     setFetching(false);
   };
@@ -159,6 +160,7 @@ export const TimersList = ({ timers, selectedTags }: Props) => {
       Number(hours) * 3600 + Number(minutes) * 60 + Number(seconds);
 
     dispatch(setSumTime(timerId, sumTime));
+    dispatch(getTimers());
     setFetching(false);
   };
 
@@ -167,6 +169,11 @@ export const TimersList = ({ timers, selectedTags }: Props) => {
     dispatch(setTimerName(timerId, timerName));
     setFetching(false);
   };
+
+  useEffect(() => {
+    dispatch(getTags());
+    dispatch(getProjects());
+  }, []);
 
   return (
     <div className={Style.container}>

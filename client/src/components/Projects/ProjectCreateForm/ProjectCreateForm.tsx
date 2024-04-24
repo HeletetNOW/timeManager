@@ -5,7 +5,11 @@ import Style from "./ProjectCreateForm.module.css";
 import { createProject } from "../../../store/projects/ActionCreators";
 import { DropListForCreateForm } from "../../DropLists/DropLists/DropListForCreateForm/DropListForCreateForm";
 
-export const ProjectCreateForm = React.memo(() => {
+type Props = {
+  updateData: () => void;
+};
+
+export const ProjectCreateForm = React.memo(({ updateData }: Props) => {
   const dispatch = useAppDispatch();
 
   const [createInputValue, setCreateInputValue] = useState("");
@@ -13,7 +17,8 @@ export const ProjectCreateForm = React.memo(() => {
   const [IsShowTags, setIsShowTags] = useState(false);
 
   const handlerCreateProject = async () => {
-    dispatch(createProject(createInputValue, selectedTags));
+    await dispatch(createProject(createInputValue, selectedTags));
+    await updateData();
   };
 
   return (
@@ -32,7 +37,7 @@ export const ProjectCreateForm = React.memo(() => {
             dataType="tags"
             isShow={IsShowTags}
             setSelectedDate={setSelectedTags}
-            selectedDate={selectedTags}
+            selectedData={selectedTags}
             setShow={setIsShowTags}
           />
           <button className={Style.button} onClick={handlerCreateProject}>

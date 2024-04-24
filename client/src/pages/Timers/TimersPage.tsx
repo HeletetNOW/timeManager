@@ -10,7 +10,7 @@ import Style from "./TimersPage.module.css";
 export const TimersPage = () => {
   const dispatch = useAppDispatch();
 
-  const { timers, selectDate, selectedTags } = useAppSelector(
+  const { timers, selectDate, selectedTags, selectedTimers } = useAppSelector(
     (state) => state.timersReducer
   );
 
@@ -25,7 +25,10 @@ export const TimersPage = () => {
         <TimersCreateForm />
       </div>
       <div className={Style.timers}>
-        <TimersList timers={timers} selectedTags={selectedTags} />
+        <TimersList
+          timers={selectedTimers === null ? timers : selectedTimers}
+          selectedTags={selectedTags}
+        />
       </div>
     </div>
   );

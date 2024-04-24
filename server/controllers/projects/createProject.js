@@ -18,7 +18,7 @@ const createProject = async (req, res) => {
         },
         tags: {
           connect: tags.map((tag) => ({
-            id: tag.id,
+            id: tag,
           })),
         },
         status: false,

@@ -18,7 +18,6 @@ const addTagsToProject = async (req, res) => {
         },
       },
       include: {
-        timers: true,
         tags: true,
       },
     });

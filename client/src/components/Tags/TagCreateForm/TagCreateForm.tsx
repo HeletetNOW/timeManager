@@ -1,21 +1,28 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { useAppDispatch } from "../../../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { createTag } from "../../../store/tags/ActionCreators";
 
 import Style from "./TagCreateForm.module.css";
 import { DropListForCreateForm } from "../../DropLists/DropLists/DropListForCreateForm/DropListForCreateForm";
 
-export const TagCreateForm = React.memo(() => {
+type Props = {
+  updateAllData: () => void;
+};
+
+export const TagCreateForm = ({ updateAllData }: Props) => {
   const dispatch = useAppDispatch();
 
   const [createInputValue, setCreateInputValue] = useState("");
-  const [selectedProjects, setSelectedProjects] = useState<number[]>([]);
+  const [selectedProjectsByCreate, setSelectedProjectsByCreate] = useState<
+    number[]
+  >([]);
 
   const [IsShowProjects, setIsShowProjects] = useState(false);
 
-  const handlerCreateProject = async () => {
-    dispatch(createTag(createInputValue, selectedProjects));
+  const handlerCreateTag = async () => {
+    await dispatch(createTag(createInputValue, selectedProjectsByCreate));
+    updateAllData();
   };
 
   return (
@@ -33,16 +40,16 @@ export const TagCreateForm = React.memo(() => {
         <div className={Style.content}>
           <DropListForCreateForm
             dataType="projects"
-            selectedDate={selectedProjects}
-            setSelectedDate={setSelectedProjects}
+            selectedData={selectedProjectsByCreate}
+            setSelectedDate={setSelectedProjectsByCreate}
             isShow={IsShowProjects}
             setShow={setIsShowProjects}
           />
-          <button className={Style.button} onClick={handlerCreateProject}>
+          <button className={Style.button} onClick={handlerCreateTag}>
             Создать
           </button>
         </div>
       </div>
     </div>
   );
-});
+};

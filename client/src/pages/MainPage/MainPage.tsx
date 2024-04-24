@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { Header } from "../../components/Header/Header";
-import { TagList } from "../Tags/TagList";
-import { ProjectList } from "../Projects/ProjectList";
+import { TagsPage } from "../Tags/TagsPage";
+import { ProjectsPage } from "../Projects/ProjectsPage";
 import { TimersPage } from "../Timers/TimersPage";
 
 export const MainPage = () => {
@@ -14,7 +14,7 @@ export const MainPage = () => {
           path="/projects"
           element={
             <Header>
-              <ProjectList />
+              <ProjectsPage />
             </Header>
           }
         />
@@ -22,7 +22,7 @@ export const MainPage = () => {
           path="/tags"
           element={
             <Header>
-              <TagList />
+              <TagsPage />
             </Header>
           }
         />

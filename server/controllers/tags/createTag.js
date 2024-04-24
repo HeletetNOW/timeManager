@@ -8,8 +8,6 @@ const createTag = async (req, res) => {
       return res.status(400).json({ message: "Введите название тега." });
     }
 
-    console.log(projects);
-
     const tag = await prisma.tag.create({
       data: {
         tagName,
@@ -18,7 +16,7 @@ const createTag = async (req, res) => {
         },
         projects: {
           connect: projects.map((project) => ({
-            id: project.id,
+            id: project,
           })),
         },
       },

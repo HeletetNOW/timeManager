@@ -1,5 +1,5 @@
 import { useAppDispatch } from "../../../hooks/hooks";
-import { getTags, setOrder } from "../../../store/tags/ActionCreators";
+import { selectTags, setOrder } from "../../../store/tags/ActionCreators";
 import Style from "./TagsTable.module.css";
 
 import sortArrowUp from "../../../imgs/sortArrowUp.svg";
@@ -18,16 +18,19 @@ export const TagsTable = React.memo(({ order, currentSearchTag }: Props) => {
 
   const setInputValue = (value: string) => {
     dispatch(tagsSlice.actions.setCurrentSearchTag(value));
+    dispatch(selectTags());
   };
 
   const onSubmitInput = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     event.currentTarget.blur();
-    dispatch(getTags());
+    dispatch(selectTags());
   };
 
-  const toggleSortOrder = () => {
-    dispatch(setOrder());
+  const toggleSortOrder = async () => {
+    if ((await dispatch(setOrder())) === 200) {
+      dispatch(selectTags(undefined, true));
+    }
   };
   return (
     <div className={Style.container}>

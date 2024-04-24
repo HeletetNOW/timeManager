@@ -4,6 +4,8 @@ const setProjectName = async (req, res) => {
   try {
     const { projectName, id } = req.body;
 
+    console.log(projectName, id);
+
     if (!projectName || !id) {
       return res
         .status(400)
@@ -15,7 +17,6 @@ const setProjectName = async (req, res) => {
       data: { projectName },
       include: {
         tags: true,
-        timers: true,
       },
     });
 

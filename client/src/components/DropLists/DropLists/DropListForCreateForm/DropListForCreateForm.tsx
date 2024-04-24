@@ -3,17 +3,17 @@ import Style from "./DropListForCreateForm.module.css";
 import tagIcon from "../../../../imgs/tag.svg";
 import projectIcon from "../../../../imgs/project.svg";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { projectType, tagType } from "../../../../types/types";
 import { useAppDispatch } from "../../../../hooks/hooks";
-import { getProjects } from "../../../../store/projects/ActionCreators";
-import { getTags } from "../../../../store/tags/ActionCreators";
+import { selectProject } from "../../../../store/projects/ActionCreators";
+import { selectTags } from "../../../../store/tags/ActionCreators";
 import { DropElementForProjectsOrTags } from "../../DropElement/DropElementForProjectsOrTags";
 
 type Props = {
   setSelectedDate: (date: number[]) => void;
   setShow: (value: boolean) => void;
-  selectedDate: number[];
+  selectedData: number[];
   isShow: boolean;
   dataType: "tags" | "projects";
 };
@@ -21,7 +21,7 @@ type Props = {
 export const DropListForCreateForm = ({
   dataType,
   isShow,
-  selectedDate,
+  selectedData,
   setSelectedDate,
   setShow,
 }: Props) => {
@@ -29,45 +29,48 @@ export const DropListForCreateForm = ({
     ((tagType | projectType) & { isChecked: boolean })[]
   >([]);
   const [searchValue, setSearchValue] = useState("");
+  const [isFetching, setFetching] = useState(false);
 
   const dispatch = useAppDispatch();
 
-  const requestData = useCallback(
-    async (dataType: string, searchValue: string) => {
-      if (dataType === "projects") {
-        return (await dispatch(getProjects(undefined))).data;
-      } else if (dataType === "tags") {
-        return (await dispatch(getTags(searchValue))).data;
-      }
-    },
-    [dispatch]
-  );
+  const requestData = async (dataType: string, searchValue: string) => {
+    if (dataType === "projects") {
+      return await dispatch(selectProject(searchValue, []));
+    } else if (dataType === "tags") {
+      return await dispatch(selectTags(searchValue));
+    }
+  };
 
   const handlerSetDate = async (dateId: number, isChecked: boolean) => {
+    setFetching(true);
     if (!isChecked) {
       const updatedData = data.map((dateItem) =>
         dateItem.id === dateId ? { ...dateItem, isChecked: true } : dateItem
       );
       setData(updatedData);
-      setSelectedDate([...selectedDate, dateId]);
+      setSelectedDate([...selectedData, dateId]);
     } else if (isChecked) {
-      let filteredNumbers = selectedDate.filter(
+      let filteredNumbers = selectedData.filter(
         (dateItem) => dateItem !== dateId
       );
       setSelectedDate([...filteredNumbers]);
     }
+    setFetching(false);
   };
 
   const handlerRequestData = useCallback(async () => {
-    const allData = await requestData(dataType, searchValue);
+    const allDataLocal: (tagType | projectType)[] = await requestData(
+      dataType,
+      searchValue
+    );
 
-    selectedDate.sort((a: number, b: number) => (a > b ? -1 : 1));
+    selectedData.sort((a: number, b: number) => (a > b ? -1 : 1));
 
     let result: ((projectType | tagType) & { isChecked: boolean })[] = [];
 
-    const localSelectedDate = [...selectedDate];
+    const localSelectedDate = [...selectedData];
 
-    allData.forEach((item: projectType | tagType) => {
+    allDataLocal.forEach((item: projectType | tagType) => {
       const itemWithChecked: Partial<projectType | tagType> & {
         isChecked: boolean;
       } = {
@@ -87,15 +90,17 @@ export const DropListForCreateForm = ({
       );
     });
     setData(result);
-  }, [requestData, searchValue, selectedDate, dataType]);
+  }, [requestData, searchValue, selectedData, dataType]);
 
   const handlerGetDate = async () => {
+    setFetching(true);
     if (isShow) {
       setShow(false);
     } else if (!isShow) {
+      await handlerRequestData();
       setShow(true);
-      handlerRequestData();
     }
+    setFetching(false);
   };
 
   let emptyDataPlaceholder = "";
@@ -109,8 +114,18 @@ export const DropListForCreateForm = ({
     inputPlaceholder += "тега";
   }
 
+  useEffect(() => {
+    handlerRequestData();
+  }, [searchValue]);
+
   return (
-    <div className={Style.container}>
+    <div
+      className={
+        isFetching
+          ? `${Style.container} ${Style.isFetching}`
+          : `${Style.container}`
+      }
+    >
       <button className={Style.button} onClick={handlerGetDate}>
         <img
           className={Style.icon}

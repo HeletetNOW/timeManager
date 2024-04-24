@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { DropListForCreateForm } from "../../DropLists/DropLists/DropListForCreateForm/DropListForCreateForm";
 import { useAppDispatch } from "../../../hooks/hooks";
-import { createTimer } from "../../../store/timers/TimersActionCreator";
+import {
+  createTimer,
+  getTimers,
+} from "../../../store/timers/TimersActionCreator";
 
 import Style from "./TimersCreateForm.module.css";
 
@@ -12,8 +15,9 @@ export const TimersCreateForm = () => {
   const [isShowTags, setShowTags] = useState(false);
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
 
-  const handlerCreateTimer = () => {
-    dispatch(createTimer(timerName, selectedTags));
+  const handlerCreateTimer = async () => {
+    await dispatch(createTimer(timerName, selectedTags));
+    await dispatch(getTimers());
     setTimerName("");
   };
 
@@ -35,7 +39,7 @@ export const TimersCreateForm = () => {
           <div className={Style.tags}>
             <DropListForCreateForm
               dataType="tags"
-              selectedDate={selectedTags}
+              selectedData={selectedTags}
               setSelectedDate={setSelectedTags}
               isShow={isShowTags}
               setShow={handlerSetShowTags}

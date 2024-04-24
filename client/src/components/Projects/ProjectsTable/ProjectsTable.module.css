@@ -22,6 +22,9 @@
   font-weight: 400;
   align-items: center;
 }
+.isFetching {
+  pointer-events: none;
+}
 
 .title::after {
   margin-left: 45px;

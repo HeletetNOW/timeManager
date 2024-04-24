@@ -4,7 +4,6 @@ import { SubProjectItem } from "../SubProjectItem/SubProjectItem";
 import {
   createSubProject,
   deleteSubProject,
-  getProjects,
   selectProjectById,
   setSubProjectStatus,
 } from "../../../store/projects/ActionCreators";
@@ -18,6 +17,7 @@ type Props = {
   projectId: number;
   isShowSubProjects: boolean;
   setFetching: (value: boolean) => void;
+  updateData: () => void;
 };
 
 export const SubProjectList = ({
@@ -25,6 +25,7 @@ export const SubProjectList = ({
   setFetching,
   projectId,
   isShowSubProjects,
+  updateData,
 }: Props) => {
   const dispatch = useAppDispatch();
 
@@ -34,10 +35,7 @@ export const SubProjectList = ({
   const [subProjects, setSubProject] = useState<subProjectType[]>([]);
 
   const selectSubProjects = async () => {
-    await dispatch(getProjects());
-
     const result = await dispatch(selectProjectById(projectId));
-
     setSubProject(result.subProjects);
   };
 
@@ -46,9 +44,8 @@ export const SubProjectList = ({
     await dispatch(
       createSubProject(createFormTitle, projectId, createFormText)
     );
-
+    await updateData();
     await selectSubProjects();
-
     setFetching(false);
   };
 

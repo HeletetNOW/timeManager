@@ -1,4 +1,4 @@
-import Style from "./TagList.module.css";
+import Style from "./TagsPage.module.css";
 
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
@@ -11,34 +11,39 @@ import {
 import { TagsTable } from "../../components/Tags/TagsTable/TagsTable";
 import { TagItem } from "../../components/Tags/TagItem/TagItem";
 import { tagsSlice } from "../../store/tags/TagsSlice";
-import { getProjectByTagIdSelected } from "../../store/projects/ActionCreators";
+import {
+  getProjects,
+  selectProjectsByTagId,
+} from "../../store/projects/ActionCreators";
 import { TagCreateForm } from "../../components/Tags/TagCreateForm/TagCreateForm";
 import { DropListForItem } from "../../components/DropLists/DropLists/DropListForItem/DropListForItem";
 
-export const TagList = () => {
-  const [editName, setEditName] = useState("");
+export const TagsPage = () => {
   const [searchProjectName, setSearchProjectName] = useState("");
-  const [data, setData] = useState([]);
+  const [projects, setProjects] = useState([]);
   const [isFetching, setFetching] = useState(false);
 
   const dispatch = useAppDispatch();
   const {
     order,
     tags,
+    selectedTags,
     currentEditTag,
+    currentEditName,
     currentSearchTag,
     currentTagIsShowProject,
   } = useAppSelector((state) => state.tagsReducer);
 
   const handlerEditButton = (id: number) => {
     dispatch(tagsSlice.actions.setCurrentEditTag(id));
-    setEditName("");
+    dispatch(tagsSlice.actions.setCurrentEditName(""));
   };
   const handlerAcceptButton = (editName: string) => {
     dispatch(setTagName(editName));
   };
-  const handlerDeleteButton = (id: number) => {
-    dispatch(deleteTag(id));
+  const handlerDeleteButton = async (id: number) => {
+    await dispatch(deleteTag(id));
+    updateAllData();
   };
 
   const setIsShowProjects = (id: number) => {
@@ -51,7 +56,7 @@ export const TagList = () => {
       setIsShowProjects(0);
     } else if (!isShow) {
       setFetching(true);
-      setData(await dispatch(getProjectByTagIdSelected(id, searchProjectName)));
+      setProjects(await dispatch(selectProjectsByTagId(id, searchProjectName)));
       setIsShowProjects(id);
     }
   };
@@ -63,35 +68,44 @@ export const TagList = () => {
   ) => {
     const action = isChecked ? "delete" : "add";
 
-    dispatch(setProjectToTag(id, projectId, action));
-    setData(await dispatch(getProjectByTagIdSelected(id, searchProjectName)));
+    await dispatch(setProjectToTag(id, projectId, action));
+    await dispatch(getProjects());
+
+    setProjects(await dispatch(selectProjectsByTagId(id, searchProjectName)));
   };
 
   const handlerSetSearchProjectName = async (value: string, id: number) => {
     setSearchProjectName(value);
-    setData(await dispatch(getProjectByTagIdSelected(id, value)));
+    setProjects(await dispatch(selectProjectsByTagId(id, value)));
+  };
+
+  const updateAllData = () => {
+    dispatch(getTags());
+    dispatch(getProjects());
   };
 
   useEffect(() => {
-    dispatch(getTags());
+    updateAllData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div className={Style.container}>
       <TagsTable order={order} currentSearchTag={currentSearchTag} />
-      <TagCreateForm />
+      <TagCreateForm updateAllData={updateAllData} />
       <div className={Style.tagsContainer}>
         <div className={Style.tags}>
-          {tags.map((tag) => {
+          {(selectedTags === null ? tags : selectedTags).map((tag) => {
             const isEdit = tag.id === currentEditTag;
             return (
               <TagItem
                 handlerEditButton={handlerEditButton}
-                setEditName={setEditName}
+                setEditName={(editName) =>
+                  dispatch(tagsSlice.actions.setCurrentEditName(editName))
+                }
                 handlerAcceptButton={handlerAcceptButton}
                 handlerDeleteButton={handlerDeleteButton}
-                editName={editName}
+                editName={currentEditName}
                 id={tag.id}
                 tagName={tag.tagName}
                 projects={tag.projects}
@@ -107,7 +121,7 @@ export const TagList = () => {
                     dataType="projects"
                     handlerGetData={handlerGetProjectsByTag}
                     dataId={tag.id}
-                    data={data}
+                    data={projects}
                   />
                 </div>
               </TagItem>
