@@ -22,6 +22,7 @@ export const TagCreateForm = ({ updateAllData }: Props) => {
 
   const handlerCreateTag = async () => {
     await dispatch(createTag(createInputValue, selectedProjectsByCreate));
+    setCreateInputValue("");
     updateAllData();
   };
 

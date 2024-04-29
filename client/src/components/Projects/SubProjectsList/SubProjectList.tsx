@@ -36,7 +36,7 @@ export const SubProjectList = ({
 
   const selectSubProjects = async () => {
     const result = await dispatch(selectProjectById(projectId));
-    setSubProject(result.subProjects);
+    setSubProject(result);
   };
 
   const handlerCreateSubProject = async () => {
@@ -44,6 +44,8 @@ export const SubProjectList = ({
     await dispatch(
       createSubProject(createFormTitle, projectId, createFormText)
     );
+    setCreateFormText("");
+    setCreateFormTitle("");
     await updateData();
     await selectSubProjects();
     setFetching(false);
@@ -51,6 +53,7 @@ export const SubProjectList = ({
 
   const handlerDeleteSubProject = async (subProjectId: number) => {
     await dispatch(deleteSubProject(subProjectId));
+    await updateData();
     await selectSubProjects();
   };
 
@@ -59,12 +62,13 @@ export const SubProjectList = ({
     subProjectStatus: boolean
   ) => {
     await dispatch(setSubProjectStatus(!subProjectStatus, subProjectId));
+    await updateData();
     await selectSubProjects();
   };
 
   useEffect(() => {
     selectSubProjects();
-  }, []);
+  }, [projectId]);
 
   if (isShowSubProjects) {
     return (

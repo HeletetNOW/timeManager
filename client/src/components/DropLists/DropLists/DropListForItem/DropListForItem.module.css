@@ -18,6 +18,7 @@
   position: absolute;
   top: 200%;
   right: 50%;
+  width: 300px;
   transform: translate(50%, 0%);
   z-index: 100;
   background-color: white;
@@ -30,6 +31,8 @@
 }
 
 .projects {
+  overflow-x: hidden;
+
   padding: 5px;
   overflow-y: auto;
   height: 100px;

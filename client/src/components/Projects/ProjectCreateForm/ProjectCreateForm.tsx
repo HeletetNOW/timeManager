@@ -18,6 +18,7 @@ export const ProjectCreateForm = React.memo(({ updateData }: Props) => {
 
   const handlerCreateProject = async () => {
     await dispatch(createProject(createInputValue, selectedTags));
+    setCreateInputValue("");
     await updateData();
   };
 

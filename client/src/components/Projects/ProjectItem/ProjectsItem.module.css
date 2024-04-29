@@ -151,6 +151,11 @@
   .input input {
     width: 200px;
   }
+
+  .title {
+    width: 200px;
+  }
+
   .item,
   .status {
     padding: 0 10px;
@@ -181,7 +186,11 @@
   .input input,
   .title {
     font-size: 16px;
-    width: 90%;
+  }
+  .title p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .input {
@@ -206,6 +215,10 @@
 
   .item {
     height: auto;
+  }
+
+  .title {
+    width: 100px;
   }
 
   .content {

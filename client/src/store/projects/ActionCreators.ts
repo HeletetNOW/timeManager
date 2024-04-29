@@ -31,7 +31,18 @@ export const selectProjectById =
     try {
       const { projects } = getSate().projectsReducer;
 
-      return projects.find((project) => project.id === projectId);
+      let result = projects.find((project) => project.id === projectId);
+
+      if (result && result.subProjects) {
+        const sortedSubProjects = result.subProjects.slice().sort((a, b) => {
+          if (a.status < b.status) return -1;
+          if (a.status > b.status) return 1;
+          return 0;
+        });
+        return sortedSubProjects;
+      }
+
+      return result?.subProjects;
     } catch (error: any) {
       console.log(error.response.data.message);
       return error.response.status;
@@ -207,8 +218,6 @@ export const selectProject =
           return project.tags.some((tag) => selectTags.includes(tag.id));
         });
       }
-
-      debugger;
 
       if (order === "desc") {
         selectDate = selectDate.reverse();

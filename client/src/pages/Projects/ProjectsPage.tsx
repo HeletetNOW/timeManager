@@ -44,8 +44,9 @@ export const ProjectsPage = () => {
     dispatch(projectsSlice.actions.setCurrentEditProjects(id));
     setEditName("");
   };
-  const handlerAcceptButton = (editName: string) => {
-    dispatch(setProjectName(editName));
+  const handlerAcceptButton = async (editName: string) => {
+    await dispatch(setProjectName(editName));
+    await updateData();
   };
   const handlerDeleteButton = async (id: number) => {
     await dispatch(deleteProject(id));

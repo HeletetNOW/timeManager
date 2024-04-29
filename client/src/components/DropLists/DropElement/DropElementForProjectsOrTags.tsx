@@ -13,7 +13,7 @@ export const DropElementForProjectsOrTags = ({
 }: Props) => {
   return (
     <div className={Style.item}>
-      <div>
+      <div className={Style.title}>
         <input
           type="checkbox"
           defaultChecked={isConnected}
