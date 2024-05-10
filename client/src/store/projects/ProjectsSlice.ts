@@ -6,8 +6,9 @@ interface IProjectsState {
   isFailed: boolean;
   error: string;
   projects: projectType[] | [];
-  selectedProjects: projectType[] | null;
-  currentEditProject: number | null;
+  selectedProjects: projectType[];
+  currentEditProject: number;
+  currentEditSubProject: number;
   currentProjectIsShowTags: number;
   currentProjectIsShowSubProjects: number;
   sortBy: "projectName" | "status" | "";
@@ -15,14 +16,15 @@ interface IProjectsState {
 
 const initialState: IProjectsState = {
   sortBy: "projectName",
-  currentEditProject: null,
+  currentEditProject: 0,
   order: "asc",
   isFailed: false,
   error: "",
   currentProjectIsShowTags: 0,
+  currentEditSubProject: 0,
   currentProjectIsShowSubProjects: 0,
   projects: [],
-  selectedProjects: null,
+  selectedProjects: [],
 };
 
 export const projectsSlice = createSlice({
@@ -33,13 +35,13 @@ export const projectsSlice = createSlice({
       state.isFailed = false;
       state.error = "";
       state.projects = action.payload;
-      state.currentEditProject = null;
+      state.currentEditProject = 0;
     },
     setSelectedProjects(state, action) {
       state.isFailed = false;
       state.error = "";
       state.selectedProjects = action.payload;
-      state.currentEditProject = null;
+      state.currentEditProject = 0;
     },
     setOrderToDesc(state) {
       state.order = "desc";
@@ -50,7 +52,9 @@ export const projectsSlice = createSlice({
     setCurrentEditProjects(state, action) {
       state.currentEditProject = action.payload;
     },
-
+    setCurrentEditSubProject(state, action) {
+      state.currentEditSubProject = action.payload;
+    },
     setSortBy(state, action) {
       state.sortBy = action.payload;
     },

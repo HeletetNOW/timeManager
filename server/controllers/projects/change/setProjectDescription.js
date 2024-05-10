@@ -15,7 +15,6 @@ const setProjectDescription = async (req, res) => {
       data: { description },
       include: {
         tags: true,
-        timers: true,
       },
     });
 

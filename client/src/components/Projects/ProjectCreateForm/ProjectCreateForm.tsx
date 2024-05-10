@@ -6,7 +6,7 @@ import { createProject } from "../../../store/projects/ActionCreators";
 import { DropListForCreateForm } from "../../DropLists/DropLists/DropListForCreateForm/DropListForCreateForm";
 
 type Props = {
-  updateData: () => void;
+  updateData: () => Promise<any>;
 };
 
 export const ProjectCreateForm = React.memo(({ updateData }: Props) => {

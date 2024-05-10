@@ -4,7 +4,7 @@ const setSubProjectName = async (req, res) => {
   try {
     const { subProjectName, id } = req.body;
 
-    if (!projectName || !id) {
+    if (!subProjectName || !id) {
       return res
         .status(400)
         .json({ message: "Заполните все обязательные поля." });

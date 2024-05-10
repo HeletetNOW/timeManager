@@ -14,8 +14,6 @@ export const getTags =
         tagName ? tagName : currentSearchTag
       );
 
-      dispatch(tagsSlice.actions.setSelectedTags(null));
-
       dispatch(tagsSlice.actions.setTags(result.data));
       return result.status;
     } catch (error: any) {

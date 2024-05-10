@@ -15,7 +15,7 @@ const setSubProjectDescription = async (req, res) => {
       data: { description },
     });
 
-    return res.status(200).json(updateupdatedSubProjectdProject);
+    return res.status(200).json(updatedSubProject);
   } catch (error) {
     return res
       .status(500)

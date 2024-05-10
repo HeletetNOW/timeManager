@@ -15,6 +15,21 @@
   width: 100%;
 }
 
+.all {
+  animation: downSpawnAnimation 0.3s linear forwards;
+}
+
+@keyframes downSpawnAnimation {
+  from {
+    opacity: 0;
+    transform: translateY(50%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+}
+
 .isFetching {
   pointer-events: none;
 }

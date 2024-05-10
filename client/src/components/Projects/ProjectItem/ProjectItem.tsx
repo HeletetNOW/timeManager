@@ -11,20 +11,27 @@ import deleteProjectIcon from "../../../imgs/deleteProject.svg";
 
 import showMoreIcon from "../../../imgs/showMore.svg";
 import { TimersCount } from "../../Timers/TimersCount/TimersCount";
+import { projectsSlice } from "../../../store/projects/ProjectsSlice";
+import { useAppDispatch } from "../../../hooks/hooks";
+import {
+  deleteProject,
+  setProjectInfo,
+} from "../../../store/projects/ActionCreators";
 
 type Props = {
-  handlerEditButton: (value: number) => void;
   setEditName: (value: string) => void;
-  handlerAcceptButton: (value: string) => void;
-  handlerDeleteButton: (value: number) => void;
+  setEditText: (value: string) => void;
+
+  updateData: () => Promise<any>;
   sumTime: number;
   editName: string;
+  editText: string;
   projectId: number;
   projectName: string;
   isEdit: boolean;
   status: boolean;
   tags: React.ReactComponentElement<any>;
-  subProjects: React.ReactComponentElement<any>;
+  subProjects?: React.ReactComponentElement<any>;
 };
 
 export const ProjectItem = ({
@@ -34,13 +41,29 @@ export const ProjectItem = ({
   isEdit,
   projectId,
   editName,
+  editText,
   subProjects,
   sumTime,
   setEditName,
-  handlerEditButton,
-  handlerAcceptButton,
-  handlerDeleteButton,
+  updateData,
 }: Props) => {
+  const dispatch = useAppDispatch();
+
+  const handlerEditButton = (id: number) => {
+    dispatch(projectsSlice.actions.setCurrentEditProjects(id));
+    setEditName("");
+  };
+
+  const handlerDeleteButton = async (id: number) => {
+    await dispatch(deleteProject(id));
+    updateData();
+  };
+
+  const handlerAcceptButton = async (editName: string) => {
+    await dispatch(setProjectInfo(editName, editText));
+    await updateData();
+  };
+
   let actionColumn = null;
 
   const buttonEdit = !isEdit ? (
@@ -75,7 +98,7 @@ export const ProjectItem = ({
     <button
       type="button"
       className={`${Style.item} ${Style.cancelButton}`}
-      onClick={() => handlerAcceptButton("")}
+      onClick={() => handlerEditButton(0)}
     >
       <img src={cancelIcon} alt="" />
     </button>
@@ -83,7 +106,10 @@ export const ProjectItem = ({
 
   actionColumn = (
     <div className={Style.actionButtons}>
-      <Link to={"/"} className={`${Style.item} ${Style.link}`}>
+      <Link
+        to={`/projects/${projectId}`}
+        className={`${Style.item} ${Style.link}`}
+      >
         <img src={showMoreIcon} alt="" />
       </Link>
       <div className={Style.edit}>{buttonEdit}</div>

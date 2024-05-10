@@ -20,9 +20,11 @@ export const getTimers =
   };
 
 export const createTimer =
-  (timerName: string, tags?: number[]) => async (dispatch: AppDispatch) => {
+  (timerName: string, tags?: number[]) =>
+  async (dispatch: AppDispatch, getStore: () => RootState) => {
     try {
-      const result = await timersAPI.createTimer(timerName, tags);
+      const { selectDate } = getStore().timersReducer;
+      const result = await timersAPI.createTimer(timerName, tags, selectDate);
 
       return result.status;
     } catch (error: any) {

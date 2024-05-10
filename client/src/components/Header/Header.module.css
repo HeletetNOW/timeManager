@@ -49,6 +49,9 @@
 }
 
 .header {
+  z-index: 100;
+  position: relative;
+  background-color: white;
   display: flex;
   align-items: center;
   justify-content: space-between;

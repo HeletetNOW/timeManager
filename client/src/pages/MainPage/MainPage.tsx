@@ -3,6 +3,7 @@ import { Header } from "../../components/Header/Header";
 import { TagsPage } from "../Tags/TagsPage";
 import { ProjectsPage } from "../Projects/ProjectsPage";
 import { TimersPage } from "../Timers/TimersPage";
+import { ProjectPage } from "../Projects/Project/ProjectPage";
 
 export const MainPage = () => {
   return (
@@ -15,6 +16,14 @@ export const MainPage = () => {
           element={
             <Header>
               <ProjectsPage />
+            </Header>
+          }
+        />
+        <Route
+          path="/projects/:id"
+          element={
+            <Header>
+              <ProjectPage />
             </Header>
           }
         />

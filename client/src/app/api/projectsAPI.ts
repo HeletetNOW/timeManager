@@ -39,6 +39,12 @@ export const projectsAPI = {
   ): Promise<AxiosResponse> {
     return instance.post("/projects/set/name", { projectName, id });
   },
+  async setProjectText(
+    description: string,
+    id: number
+  ): Promise<AxiosResponse> {
+    return instance.post("/projects/set/description", { description, id });
+  },
   async deleteProject(id: number): Promise<AxiosResponse> {
     return instance.delete(`/projects/delete/${id}`);
   },
@@ -61,5 +67,11 @@ export const projectsAPI = {
     id: number
   ): Promise<AxiosResponse> {
     return instance.post(`/projects/set/substatus`, { status, id });
+  },
+  async setSubProjectTitle(id: number, subProjectName: string) {
+    return instance.post("/projects/set/subname", { subProjectName, id });
+  },
+  async setSubProjectText(id: number, description: string) {
+    return instance.post("/projects/set/subdescription", { description, id });
   },
 };

@@ -1,8 +1,36 @@
 .header {
+  position: relative;
+  z-index: 100;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  animation: topSpawnAnimation 0.3s linear forwards;
+}
+
+.timers {
+  animation: downSpawnAnimation 0.3s linear forwards;
+}
+
+@keyframes topSpawnAnimation {
+  from {
+    opacity: 0;
+    transform: translateY(-50%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+}
+@keyframes downSpawnAnimation {
+  from {
+    opacity: 0;
+    transform: translateY(30%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0%);
+  }
 }
 
 @media (max-width: 1400px) {

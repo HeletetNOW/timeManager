@@ -58,7 +58,6 @@
 @media (max-width: 1000px) {
   .navBar {
     transition: none;
-
     position: absolute;
     left: -100%;
     width: 100%;

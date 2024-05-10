@@ -7,9 +7,10 @@ export const timersAPI = {
   },
   async createTimer(
     timerName: string,
-    tags?: number[]
+    tags?: number[],
+    date?: number
   ): Promise<AxiosResponse> {
-    return instance.post("/timers/add", { timerName, tags });
+    return instance.post("/timers/add", { timerName, tags, date });
   },
   async deleteTimer(id: number): Promise<AxiosResponse> {
     return instance.delete(`/timers/delete/${id}`);

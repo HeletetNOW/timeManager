@@ -91,8 +91,10 @@ export const TagsPage = () => {
 
   return (
     <div className={Style.container}>
-      <TagsTable order={order} currentSearchTag={currentSearchTag} />
-      <TagCreateForm updateAllData={updateAllData} />
+      <div className={Style.dataSelect}>
+        <TagsTable order={order} currentSearchTag={currentSearchTag} />
+        <TagCreateForm updateAllData={updateAllData} />
+      </div>
       <div className={Style.tagsContainer}>
         <div className={Style.tags}>
           {(selectedTags === null ? tags : selectedTags).map((tag) => {

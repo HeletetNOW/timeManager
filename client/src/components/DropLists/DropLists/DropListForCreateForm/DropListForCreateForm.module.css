@@ -12,21 +12,22 @@
 }
 
 .main {
-  height: 150px;
+  height: 200px;
+  width: 400px;
   padding: 10px 20px;
   display: block;
   position: absolute;
   top: 200%;
   right: 50%;
   transform: translate(50%, 0%);
-  z-index: 100;
+  z-index: 1000;
   background-color: white;
   border: 3px solid #d9d9d9;
   border-radius: 30px;
 }
 
 .main form input {
-  width: 200px;
+  width: 100%;
 }
 
 .projects {
@@ -35,6 +36,7 @@
   height: 100px;
 }
 .container {
+  z-index: 1000;
   position: relative;
 }
 
@@ -60,7 +62,7 @@
   }
   .main {
     width: 50%;
-    top: 220px;
+    top: 150px;
     left: 50%;
     transform: translate(-50%, 0%);
   }

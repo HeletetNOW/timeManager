@@ -2,9 +2,10 @@ const { prisma } = require("../../prisma/prisma-client");
 
 const createTimer = async (req, res) => {
   try {
-    const { timerName, tags = [] } = req.body;
+    const { timerName, tags = [], date = new Date() } = req.body;
 
-    console.log(tags);
+    let dayToCreate = new Date(date);
+    dayToCreate.setHours(0, 0, 0, 0);
 
     if (!timerName) {
       return res.status(400).json({ message: "Введите название таймера." });
@@ -13,7 +14,7 @@ const createTimer = async (req, res) => {
     const timer = await prisma.timer.create({
       data: {
         timerName,
-        addTimer: new Date(),
+        addTimer: dayToCreate,
         author: {
           connect: { id: req.user.id },
         },

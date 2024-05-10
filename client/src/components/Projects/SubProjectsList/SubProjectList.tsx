@@ -5,19 +5,22 @@ import {
   createSubProject,
   deleteSubProject,
   selectProjectById,
+  setSubProjectInfo,
   setSubProjectStatus,
 } from "../../../store/projects/ActionCreators";
 import { subProjectType } from "../../../types/types";
 
 import Style from "./SubProjectList.module.css";
 import { SubProjectCreateForm } from "../SubProjectCreateForm/SubProjectCreateForm";
+import { projectsSlice } from "../../../store/projects/ProjectsSlice";
 
 type Props = {
   isFetching: boolean;
   projectId: number;
   isShowSubProjects: boolean;
+  currentEditSubProject: number;
   setFetching: (value: boolean) => void;
-  updateData: () => void;
+  updateData: () => Promise<void>;
 };
 
 export const SubProjectList = ({
@@ -25,6 +28,7 @@ export const SubProjectList = ({
   setFetching,
   projectId,
   isShowSubProjects,
+  currentEditSubProject,
   updateData,
 }: Props) => {
   const dispatch = useAppDispatch();
@@ -32,11 +36,20 @@ export const SubProjectList = ({
   const [createFormTitle, setCreateFormTitle] = useState("");
   const [createFormText, setCreateFormText] = useState("");
 
+  const [editTitle, setEditTitle] = useState("");
+  const [editText, setEditText] = useState("");
+
   const [subProjects, setSubProject] = useState<subProjectType[]>([]);
 
   const selectSubProjects = async () => {
     const result = await dispatch(selectProjectById(projectId));
     setSubProject(result);
+  };
+
+  const handlerEditSubProject = async (subProjectId: number) => {
+    dispatch(projectsSlice.actions.setCurrentEditSubProject(subProjectId));
+    setEditTitle("");
+    setEditText("");
   };
 
   const handlerCreateSubProject = async () => {
@@ -62,6 +75,12 @@ export const SubProjectList = ({
     subProjectStatus: boolean
   ) => {
     await dispatch(setSubProjectStatus(!subProjectStatus, subProjectId));
+    await updateData();
+    await selectSubProjects();
+  };
+
+  const handlerAcceptButton = async () => {
+    await dispatch(setSubProjectInfo(editTitle, editText));
     await updateData();
     await selectSubProjects();
   };
@@ -93,6 +112,17 @@ export const SubProjectList = ({
                     subProjects.map((subProject) => {
                       return (
                         <SubProjectItem
+                          setEditTitle={setEditTitle}
+                          setEditText={setEditText}
+                          editTitle={editTitle}
+                          editText={editText}
+                          isEdit={
+                            currentEditSubProject === subProject.id
+                              ? true
+                              : false
+                          }
+                          handlerAcceptButton={handlerAcceptButton}
+                          handlerEditSubProject={handlerEditSubProject}
                           subProjectDescription={subProject.description}
                           handlerDeleteSubProject={handlerDeleteSubProject}
                           subProjectTitle={subProject.subProjectName}

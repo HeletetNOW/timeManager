@@ -15,8 +15,6 @@ export const getProjects =
         sortBy
       );
 
-      dispatch(projectsSlice.actions.setSelectedProjects(null));
-
       dispatch(projectsSlice.actions.setProjects(result.data));
       return result.status;
     } catch (error: any) {
@@ -125,23 +123,73 @@ export const setTagToProject =
     }
   };
 
-export const setProjectName =
-  (projectName: string) =>
+export const setProjectInfo =
+  (projectName: string, projectText: string) =>
   async (dispatch: AppDispatch, getSate: () => RootState) => {
     try {
       const { currentEditProject } = getSate().projectsReducer;
 
-      if (projectName === "") {
-        return dispatch(projectsSlice.actions.setCurrentEditProjects(null));
+      if (projectName === "" && projectText === "") {
+        return dispatch(projectsSlice.actions.setCurrentEditProjects(0));
       }
 
-      if (currentEditProject) {
-        const result = await projectsAPI.setProjectName(
-          projectName,
-          currentEditProject
-        );
+      if (currentEditProject !== 0) {
+        const resultTitle =
+          projectName !== ""
+            ? await projectsAPI.setProjectName(projectName, currentEditProject)
+            : true;
 
-        return result.status;
+        const resultText =
+          projectText !== ""
+            ? await projectsAPI.setProjectText(projectText, currentEditProject)
+            : true;
+
+        const result = resultTitle && resultText ? true : false;
+        if (result) {
+          dispatch(projectsSlice.actions.setCurrentEditProjects(0));
+        }
+
+        return result;
+      }
+    } catch (error: any) {
+      console.log(error.response.data.message);
+      return error.response.status;
+    }
+  };
+
+export const setSubProjectInfo =
+  (subProjectTitle: string, subProjectText: string) =>
+  async (dispatch: AppDispatch, getSate: () => RootState) => {
+    try {
+      const { currentEditSubProject } = getSate().projectsReducer;
+
+      if (subProjectTitle === "" && subProjectText === "") {
+        return dispatch(projectsSlice.actions.setCurrentEditSubProject(0));
+      }
+
+      if (currentEditSubProject !== 0) {
+        const resultTitle =
+          subProjectTitle !== ""
+            ? await projectsAPI.setSubProjectTitle(
+                currentEditSubProject,
+                subProjectTitle
+              )
+            : true;
+
+        const resultText =
+          subProjectText !== ""
+            ? await projectsAPI.setSubProjectText(
+                currentEditSubProject,
+                subProjectText
+              )
+            : true;
+
+        const result = resultTitle && resultText ? true : false;
+        if (result) {
+          dispatch(projectsSlice.actions.setCurrentEditSubProject(0));
+        }
+
+        return result;
       }
     } catch (error: any) {
       console.log(error.response.data.message);
@@ -184,7 +232,12 @@ export const setSortProjects =
   };
 
 export const selectProject =
-  (projectName: string, selectTags: number[], isSetOrder?: boolean) =>
+  (
+    projectName: string,
+    selectTags: number[],
+    isSetOrder?: boolean,
+    projectId?: number
+  ) =>
   async (dispatch: AppDispatch, getSate: () => RootState) => {
     try {
       const { projects, order, sortBy } = getSate().projectsReducer;
@@ -197,11 +250,18 @@ export const selectProject =
         return dispatch(projectsSlice.actions.setSelectedProjects(null));
       }
 
-      let selectDate = projects.filter((project) =>
-        project.projectName
-          .toLocaleLowerCase()
-          .includes(projectName.toLocaleLowerCase())
-      );
+      let selectDate: projectType[] = [];
+
+      if (projectId === undefined) {
+        selectDate = projects.filter((project) =>
+          project.projectName
+            .toLocaleLowerCase()
+            .includes(projectName.toLocaleLowerCase())
+        );
+      } else {
+        selectDate = projects.filter((project) => project.id === projectId);
+        return selectDate.length > 0 ? selectDate : null;
+      }
 
       if (sortBy === "projectName") {
         selectDate = selectDate.sort((a, b) =>

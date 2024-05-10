@@ -7,10 +7,7 @@ import {
   selectTagsWitchCheked,
 } from "../../store/tags/ActionCreators";
 import {
-  deleteProject,
   getProjects,
-  selectProject,
-  setProjectName,
   setTagToProject,
 } from "../../store/projects/ActionCreators";
 import { ProjectsTable } from "../../components/Projects/ProjectsTable/ProjectsTable";
@@ -24,12 +21,14 @@ import { projectType } from "../../types/types";
 
 export const ProjectsPage = () => {
   const [editName, setEditName] = useState("");
+  const [editText, setEditText] = useState("");
+
+  const [searchTagName, setSearchTagName] = useState("");
   const [searchProjectName, setSearchProjectName] = useState("");
   const [tags, setTags] = useState([]);
   const [isFetching, setFetching] = useState(false);
 
   const dispatch = useAppDispatch();
-
   const {
     sortBy,
     order,
@@ -38,20 +37,8 @@ export const ProjectsPage = () => {
     currentEditProject,
     currentProjectIsShowTags,
     selectedProjects,
+    currentEditSubProject,
   } = useAppSelector((state) => state.projectsReducer);
-
-  const handlerEditButton = (id: number) => {
-    dispatch(projectsSlice.actions.setCurrentEditProjects(id));
-    setEditName("");
-  };
-  const handlerAcceptButton = async (editName: string) => {
-    await dispatch(setProjectName(editName));
-    await updateData();
-  };
-  const handlerDeleteButton = async (id: number) => {
-    await dispatch(deleteProject(id));
-    updateData();
-  };
 
   const setIsShowTags = (id: number) => {
     dispatch(projectsSlice.actions.setCurrentProjectIsShowTags(id));
@@ -74,7 +61,7 @@ export const ProjectsPage = () => {
       setIsShowTags(0);
     } else if (!isShowTags) {
       setTags(
-        await dispatch(selectTagsWitchCheked(searchProjectName, id, "project"))
+        await dispatch(selectTagsWitchCheked(searchTagName, id, "project"))
       );
       setIsShowTags(id);
     }
@@ -95,9 +82,14 @@ export const ProjectsPage = () => {
     await dispatch(getProjects());
 
     setTags(
-      await dispatch(selectTagsWitchCheked(searchProjectName, id, "project"))
+      await dispatch(selectTagsWitchCheked(searchTagName, id, "project"))
     );
     setFetching(false);
+  };
+
+  const handlerSetSearchTagName = async (value: string, tagId: number) => {
+    setSearchTagName(value);
+    setTags(await dispatch(selectTagsWitchCheked(value, tagId, "project")));
   };
 
   const handlerSetSearchProjectName = async (value: string) => {
@@ -109,13 +101,13 @@ export const ProjectsPage = () => {
     await dispatch(getTags());
   };
 
+  let projectsToMap: projectType[] =
+    searchProjectName === "" ? projects : selectedProjects;
+
   useEffect(() => {
     updateData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const projectsToMap: projectType[] =
-    selectedProjects === null ? projects : selectedProjects;
 
   return (
     <div className={Style.container}>
@@ -127,62 +119,65 @@ export const ProjectsPage = () => {
         setSearchProjectName={handlerSetSearchProjectName}
         currentSearchProject={searchProjectName}
       />
-      <ProjectCreateForm updateData={updateData} />
-      <div className={Style.projectsContainer}>
-        <div className={Style.projects}>
-          {projectsToMap.map((project) => {
-            const isEdit: boolean = project.id === currentEditProject;
-            const isShowSubProjects: boolean =
-              project.id === currentProjectIsShowSubProjects;
-            return (
-              <div className={isFetching ? Style.isFetching : ""}>
-                <ProjectItem
-                  handlerEditButton={handlerEditButton}
-                  setEditName={setEditName}
-                  handlerAcceptButton={handlerAcceptButton}
-                  handlerDeleteButton={handlerDeleteButton}
-                  editName={editName}
-                  sumTime={project.sumTime}
-                  status={project.status}
-                  projectId={project.id}
-                  projectName={project.projectName}
-                  isEdit={isEdit}
-                  key={project.id}
-                  tags={
-                    <DropListForItem
-                      setSelect={handlerSetTag}
-                      searchName={searchProjectName}
-                      setSearchName={handlerSetSearchProjectName}
-                      isShow={
-                        project.id === currentProjectIsShowTags ? true : false
-                      }
-                      handlerGetData={handlerGetTagsByProject}
-                      dataType="tags"
-                      dataId={project.id}
-                      data={tags}
-                    />
-                  }
-                  subProjects={
-                    <SubProjectShowList
-                      isShowSubProjects={isShowSubProjects}
-                      setShowSubProject={setShowSubProject}
-                      projectId={project.id}
-                      isFetching={isFetching}
-                    />
-                  }
-                />
-                <div className={Style.projectList}>
-                  <SubProjectList
+      <div className={Style.all}>
+        <ProjectCreateForm updateData={updateData} />
+        <div className={Style.projectsContainer}>
+          <div className={Style.projects}>
+            {projectsToMap.map((project) => {
+              const isEdit: boolean = project.id === currentEditProject;
+              const isShowSubProjects: boolean =
+                project.id === currentProjectIsShowSubProjects;
+              return (
+                <div className={isFetching ? Style.isFetching : ""}>
+                  <ProjectItem
+                    editText={editText}
+                    setEditText={setEditText}
                     updateData={updateData}
-                    isShowSubProjects={isShowSubProjects}
-                    isFetching={isFetching}
-                    setFetching={setFetching}
+                    setEditName={setEditName}
+                    editName={editName}
+                    sumTime={project.sumTime}
+                    status={project.status}
                     projectId={project.id}
+                    projectName={project.projectName}
+                    isEdit={isEdit}
+                    key={project.id}
+                    tags={
+                      <DropListForItem
+                        setSelect={handlerSetTag}
+                        searchName={searchTagName}
+                        setSearchName={handlerSetSearchTagName}
+                        isShow={
+                          project.id === currentProjectIsShowTags ? true : false
+                        }
+                        handlerGetData={handlerGetTagsByProject}
+                        dataType="tags"
+                        dataId={project.id}
+                        data={tags}
+                      />
+                    }
+                    subProjects={
+                      <SubProjectShowList
+                        isShowSubProjects={isShowSubProjects}
+                        setShowSubProject={setShowSubProject}
+                        projectId={project.id}
+                        isFetching={isFetching}
+                      />
+                    }
                   />
+                  <div className={Style.projectList}>
+                    <SubProjectList
+                      currentEditSubProject={currentEditSubProject}
+                      updateData={updateData}
+                      isShowSubProjects={isShowSubProjects}
+                      isFetching={isFetching}
+                      setFetching={setFetching}
+                      projectId={project.id}
+                    />
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
