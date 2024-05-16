@@ -149,7 +149,7 @@ export const TimersList = ({ timers, selectedTags }: Props) => {
     setFetching(false);
   };
 
-  const handlerSetSumTime = (
+  const handlerSetSumTime = async (
     timerId: number,
     hours: string,
     minutes: string,
@@ -159,20 +159,27 @@ export const TimersList = ({ timers, selectedTags }: Props) => {
     const sumTime =
       Number(hours) * 3600 + Number(minutes) * 60 + Number(seconds);
 
-    dispatch(setSumTime(timerId, sumTime));
-    dispatch(getTimers());
+    await dispatch(setSumTime(timerId, sumTime));
+    await dispatch(getTimers());
     setFetching(false);
   };
 
-  const handlerSetTimerName = (timerId: number, timerName: string) => {
+  const handlerSetTimerName = async (timerId: number, timerName: string) => {
     setFetching(true);
     dispatch(setTimerName(timerId, timerName));
     setFetching(false);
   };
 
+  const initialLoad = async () => {
+    await dispatch(getTags());
+    await dispatch(getProjects());
+
+    handlerGetSubProjectsByTimer(currentTimerIsShowProjects, false);
+    handlerGetTagsByTimer(currentTimerIsShowTags, false);
+  };
+
   useEffect(() => {
-    dispatch(getTags());
-    dispatch(getProjects());
+    initialLoad();
   }, []);
 
   return (

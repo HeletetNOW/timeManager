@@ -6,6 +6,7 @@ import { projectsSlice } from "./ProjectsSlice";
 export const getProjects =
   (id?: number) => async (dispatch: AppDispatch, getSate: () => RootState) => {
     try {
+      dispatch(projectsSlice.actions.projectsFetching());
       const { order, sortBy } = getSate().projectsReducer;
 
       const result = await projectsAPI.getProjects(
@@ -16,9 +17,15 @@ export const getProjects =
       );
 
       dispatch(projectsSlice.actions.setProjects(result.data));
+      dispatch(projectsSlice.actions.projectsFetchingSuccess());
+
       return result.status;
     } catch (error: any) {
       console.log(error.response.data.message);
+      dispatch(
+        projectsSlice.actions.projectsFetchingError(error.response.data.message)
+      );
+
       return error.response.status;
     }
   };

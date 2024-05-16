@@ -17,16 +17,20 @@ import {
 } from "../../store/projects/ActionCreators";
 import { TagCreateForm } from "../../components/Tags/TagCreateForm/TagCreateForm";
 import { DropListForItem } from "../../components/DropLists/DropLists/DropListForItem/DropListForItem";
+import { Loader } from "../../components/Loader/Loader";
 
 export const TagsPage = () => {
+  const [isVisibleLoader, setVisibleLoader] = useState(true);
+
   const [searchProjectName, setSearchProjectName] = useState("");
   const [projects, setProjects] = useState([]);
-  const [isFetching, setFetching] = useState(false);
+  const [isFetchingLocal, setFetchingLocal] = useState(false);
 
   const dispatch = useAppDispatch();
   const {
     order,
     tags,
+    isFetching,
     selectedTags,
     currentEditTag,
     currentEditName,
@@ -48,14 +52,14 @@ export const TagsPage = () => {
 
   const setIsShowProjects = (id: number) => {
     dispatch(tagsSlice.actions.setCurrentTagIsShowProject(id));
-    setFetching(false);
+    setFetchingLocal(false);
   };
 
   const handlerGetProjectsByTag = async (id: number, isShow: boolean) => {
     if (isShow) {
       setIsShowProjects(0);
     } else if (!isShow) {
-      setFetching(true);
+      setFetchingLocal(true);
       setProjects(await dispatch(selectProjectsByTagId(id, searchProjectName)));
       setIsShowProjects(id);
     }
@@ -89,7 +93,13 @@ export const TagsPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
+  return isVisibleLoader ? (
+    <Loader
+      isFetching={isFetching}
+      setVisible={setVisibleLoader}
+      isVisible={isVisibleLoader}
+    />
+  ) : (
     <div className={Style.container}>
       <div className={Style.dataSelect}>
         <TagsTable order={order} currentSearchTag={currentSearchTag} />
@@ -114,7 +124,7 @@ export const TagsPage = () => {
                 isEdit={isEdit}
                 key={tag.id}
               >
-                <div className={isFetching ? Style.isFetching : ""}>
+                <div className={isFetchingLocal ? Style.isFetching : ""}>
                   <DropListForItem
                     setSelect={handlerSetProject}
                     searchName={searchProjectName}

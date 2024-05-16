@@ -8,16 +8,11 @@ import { useEffect } from "react";
 import { currentAuth } from "./store/auth/ActionCreators";
 
 export const App = () => {
-  const { isFetching, userInfo } = useAppSelector((state) => state.authReducer);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(currentAuth());
   }, [dispatch]);
-
-  if (isFetching) {
-    return <div>Загрузка...</div>;
-  }
 
   return (
     <div className="App">

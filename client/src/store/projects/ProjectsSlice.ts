@@ -4,6 +4,7 @@ import { projectType } from "../../types/types";
 interface IProjectsState {
   order: "desc" | "asc";
   isFailed: boolean;
+  isFetching: boolean;
   error: string;
   projects: projectType[] | [];
   selectedProjects: projectType[];
@@ -18,6 +19,7 @@ const initialState: IProjectsState = {
   sortBy: "projectName",
   currentEditProject: 0,
   order: "asc",
+  isFetching: false,
   isFailed: false,
   error: "",
   currentProjectIsShowTags: 0,
@@ -31,6 +33,19 @@ export const projectsSlice = createSlice({
   name: "projects",
   initialState,
   reducers: {
+    projectsFetching(state) {
+      state.isFetching = true;
+    },
+    projectsFetchingSuccess(state) {
+      state.isFetching = false;
+      state.isFailed = false;
+      state.error = "";
+    },
+    projectsFetchingError(state, action) {
+      state.isFetching = false;
+      state.isFailed = true;
+      state.error = action.payload;
+    },
     setProjects(state, action) {
       state.isFailed = false;
       state.error = "";

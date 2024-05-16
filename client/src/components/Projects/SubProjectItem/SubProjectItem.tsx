@@ -7,11 +7,13 @@ import cancelIcon from "../../../imgs/cancel.svg";
 
 import deleteSubProjectIcon from "../../../imgs/deleteSubProject.svg";
 import checkMarkIcon from "../../../imgs/checkMark.svg";
+import { TimersCount } from "../../Timers/TimersCount/TimersCount";
 
 type Props = {
   subProjectId: number;
   subProjectTitle: string;
   subProjectStatus: boolean;
+  subProjectSumTime: number;
   isEdit: boolean;
   subProjectDescription: string;
   handlerSetSubProjectStatus: (
@@ -34,6 +36,7 @@ export const SubProjectItem = ({
   setEditTitle,
   editTitle,
   isEdit,
+  subProjectSumTime,
   subProjectStatus,
   subProjectDescription,
   handlerDeleteSubProject,
@@ -105,6 +108,7 @@ export const SubProjectItem = ({
     <div className={Style.item}>
       <div className={Style.title}>{titleElement}</div>
       <div className={Style.desc}>{textElement}</div>
+      <TimersCount sumTime={subProjectSumTime} />
       <div className={Style.content}>
         <div
           className={Style.status}

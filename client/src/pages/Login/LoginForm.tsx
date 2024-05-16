@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { useForm } from "react-hook-form";
@@ -9,7 +9,8 @@ import Style from "./LoginForm.module.css";
 import ShowPassword from "../../imgs/showPassword.svg";
 import NoShowPassword from "../../imgs/NoShowPassword.svg";
 
-import logo from "../../imgs/logo.png";
+import logo from "../../imgs/logo.svg";
+import { Loader } from "../../components/Loader/Loader";
 
 type FormValue = {
   email: string;
@@ -17,8 +18,10 @@ type FormValue = {
 };
 
 export const LoginForm = () => {
+  const [isVisibleLoader, setVisibleLoader] = useState(true);
+
   const navigate = useNavigate();
-  const { userInfo } = useAppSelector((state) => state.authReducer);
+  const { userInfo, isFetching } = useAppSelector((state) => state.authReducer);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useAppDispatch();
@@ -46,7 +49,13 @@ export const LoginForm = () => {
     }
   };
 
-  return (
+  return isVisibleLoader ? (
+    <Loader
+      isFetching={isFetching}
+      isVisible={isVisibleLoader}
+      setVisible={setVisibleLoader}
+    />
+  ) : (
     <div className={Style.container}>
       <div className={Style.header}>
         <div className={Style.logo}>

@@ -5,7 +5,31 @@
   justify-content: center;
 }
 
+@keyframes downSpawnAnimation {
+  from {
+    opacity: 0;
+    transform: translateY(10%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+}
+
+@keyframes upSpawnAnimation {
+  from {
+    opacity: 0;
+    transform: translateY(-10%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+}
+
 .header {
+  animation: upSpawnAnimation 0.3s linear forwards;
+
   position: fixed;
   display: flex;
   justify-content: space-between;
@@ -77,6 +101,7 @@
 }
 
 .form {
+  animation: downSpawnAnimation 0.3s linear forwards;
   border: 2px #008aa4 solid;
   border-radius: 70px;
   padding: 40px 0;

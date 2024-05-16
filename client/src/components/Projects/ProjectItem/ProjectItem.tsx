@@ -133,17 +133,7 @@ export const ProjectItem = ({
       <div className={Style.info}>
         <div className={Style.input}>{nameElement}</div>
         <div className={Style.timersCount}>
-          <TimersCount
-            hours={Math.floor(sumTime / 3600)
-              .toString()
-              .padStart(2, "0")}
-            minutes={Math.floor((sumTime % 3600) / 60)
-              .toString()
-              .padStart(2, "0")}
-            seconds={Math.floor(sumTime % 60)
-              .toString()
-              .padStart(2, "0")}
-          />
+          <TimersCount sumTime={sumTime} />
         </div>
       </div>
       <div className={Style.content}>

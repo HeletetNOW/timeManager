@@ -191,17 +191,7 @@ export const ProjectPage = () => {
               <div className={Style.input}>{titleElement}</div>
               <div className={Style.input}>{textElement}</div>
               <div className={Style.timersCount}>
-                <TimersCount
-                  hours={Math.floor(currentProject.sumTime / 3600)
-                    .toString()
-                    .padStart(2, "0")}
-                  minutes={Math.floor((currentProject.sumTime % 3600) / 60)
-                    .toString()
-                    .padStart(2, "0")}
-                  seconds={Math.floor(currentProject.sumTime % 60)
-                    .toString()
-                    .padStart(2, "0")}
-                />
+                <TimersCount sumTime={currentProject.sumTime} />
               </div>
             </div>
             <div className={Style.content}>

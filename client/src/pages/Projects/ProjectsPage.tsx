@@ -18,15 +18,18 @@ import { SubProjectShowList } from "../../components/Projects/SubProjectShowList
 import { SubProjectList } from "../../components/Projects/SubProjectsList/SubProjectList";
 import { DropListForItem } from "../../components/DropLists/DropLists/DropListForItem/DropListForItem";
 import { projectType } from "../../types/types";
+import { Loader } from "../../components/Loader/Loader";
 
 export const ProjectsPage = () => {
+  const [isVisibleLoader, setVisibleLoader] = useState(true);
+
   const [editName, setEditName] = useState("");
   const [editText, setEditText] = useState("");
 
   const [searchTagName, setSearchTagName] = useState("");
   const [searchProjectName, setSearchProjectName] = useState("");
   const [tags, setTags] = useState([]);
-  const [isFetching, setFetching] = useState(false);
+  const [isFetchingLocal, setFetchingLocal] = useState(false);
 
   const dispatch = useAppDispatch();
   const {
@@ -38,11 +41,12 @@ export const ProjectsPage = () => {
     currentProjectIsShowTags,
     selectedProjects,
     currentEditSubProject,
+    isFetching,
   } = useAppSelector((state) => state.projectsReducer);
 
   const setIsShowTags = (id: number) => {
     dispatch(projectsSlice.actions.setCurrentProjectIsShowTags(id));
-    setFetching(false);
+    setFetchingLocal(false);
   };
 
   const setShowSubProject = (id: number) => {
@@ -51,11 +55,11 @@ export const ProjectsPage = () => {
     } else if (currentProjectIsShowSubProjects !== id) {
       dispatch(projectsSlice.actions.setCurrentProjectIsShowSubProjects(id));
     }
-    setFetching(false);
+    setFetchingLocal(false);
   };
 
   const handlerGetTagsByProject = async (id: number, isShowTags: boolean) => {
-    setFetching(true);
+    setFetchingLocal(true);
 
     if (isShowTags) {
       setIsShowTags(0);
@@ -72,7 +76,7 @@ export const ProjectsPage = () => {
     tagId: number,
     isChecked: boolean
   ) => {
-    setFetching(true);
+    setFetchingLocal(true);
 
     const action = isChecked ? "delete" : "add";
 
@@ -84,7 +88,7 @@ export const ProjectsPage = () => {
     setTags(
       await dispatch(selectTagsWitchCheked(searchTagName, id, "project"))
     );
-    setFetching(false);
+    setFetchingLocal(false);
   };
 
   const handlerSetSearchTagName = async (value: string, tagId: number) => {
@@ -99,6 +103,8 @@ export const ProjectsPage = () => {
   const updateData = async () => {
     await dispatch(getProjects());
     await dispatch(getTags());
+
+    await handlerGetTagsByProject(currentProjectIsShowTags, false);
   };
 
   let projectsToMap: projectType[] =
@@ -109,11 +115,17 @@ export const ProjectsPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
+  return isVisibleLoader ? (
+    <Loader
+      isFetching={isFetching}
+      setVisible={setVisibleLoader}
+      isVisible={isVisibleLoader}
+    />
+  ) : (
     <div className={Style.container}>
       <ProjectsTable
-        isFetching={isFetching}
-        setFetching={setFetching}
+        isFetching={isFetchingLocal}
+        setFetching={setFetchingLocal}
         sortBy={sortBy}
         order={order}
         setSearchProjectName={handlerSetSearchProjectName}
@@ -128,7 +140,7 @@ export const ProjectsPage = () => {
               const isShowSubProjects: boolean =
                 project.id === currentProjectIsShowSubProjects;
               return (
-                <div className={isFetching ? Style.isFetching : ""}>
+                <div className={isFetchingLocal ? Style.isFetching : ""}>
                   <ProjectItem
                     editText={editText}
                     setEditText={setEditText}
@@ -160,7 +172,7 @@ export const ProjectsPage = () => {
                         isShowSubProjects={isShowSubProjects}
                         setShowSubProject={setShowSubProject}
                         projectId={project.id}
-                        isFetching={isFetching}
+                        isFetching={isFetchingLocal}
                       />
                     }
                   />
@@ -169,8 +181,8 @@ export const ProjectsPage = () => {
                       currentEditSubProject={currentEditSubProject}
                       updateData={updateData}
                       isShowSubProjects={isShowSubProjects}
-                      isFetching={isFetching}
-                      setFetching={setFetching}
+                      isFetching={isFetchingLocal}
+                      setFetching={setFetchingLocal}
                       projectId={project.id}
                     />
                   </div>

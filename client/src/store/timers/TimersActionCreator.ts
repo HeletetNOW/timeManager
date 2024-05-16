@@ -7,14 +7,18 @@ export const getTimers =
   (date?: number) =>
   async (dispatch: AppDispatch, getStore: () => RootState) => {
     try {
+      dispatch(timersSlice.actions.timersFetching());
       const { selectDate } = getStore().timersReducer;
 
       const result = await timersAPI.getTimers(date ? date : selectDate);
 
       dispatch(timersSlice.actions.setTimers(result.data));
+      dispatch(timersSlice.actions.timersFetchingSuccess());
+
       return result.status;
     } catch (error: any) {
       console.log(error.response.data.message);
+      dispatch(timersSlice.actions.timersFetchingError(error.data.message));
       return error.response.status;
     }
   };

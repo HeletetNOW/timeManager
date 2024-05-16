@@ -15,13 +15,13 @@ type Props = {
   timerControl: (timerId: number, action: "start" | "stop") => void;
   handlerDeleteTimer: (id: number) => void;
   handlerSetCurrentEditTimer: (id: number) => void;
-  handlerSetTimerName: (timerId: number, timerName: string) => void;
+  handlerSetTimerName: (timerId: number, timerName: string) => Promise<any>;
   handlerSetSumTime: (
     timerId: number,
     hours: string,
     minutes: string,
     seconds: string
-  ) => void;
+  ) => Promise<any>;
   isFetching: boolean;
   isEdit: boolean;
   timerId: number;
@@ -135,7 +135,7 @@ export const TimersItem = ({
               />
             </>
           ) : (
-            <TimersCount hours={hours} minutes={minutes} seconds={seconds} />
+            <TimersCount sumTime={currentTime} />
           )}
         </div>
       </div>
@@ -179,9 +179,9 @@ export const TimersItem = ({
               <>
                 <button
                   className={`${Style.title} ${Style.saveButton}`}
-                  onClick={() => {
-                    handlerSetTimerName(timerId, editTimerName);
-                    handlerSetSumTime(
+                  onClick={async () => {
+                    await handlerSetTimerName(timerId, editTimerName);
+                    await handlerSetSumTime(
                       timerId,
                       editHours,
                       editMinutes,

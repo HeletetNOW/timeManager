@@ -4,6 +4,7 @@ import { tagType } from "../../types/types";
 interface ITagsState {
   order: "desc" | "asc";
   isFailed: boolean;
+  isFetching: boolean;
   error: string;
   tags: tagType[] | [];
   selectedTags: tagType[] | null;
@@ -18,6 +19,7 @@ const initialState: ITagsState = {
   currentSearchTag: "",
   currentEditTag: null,
   order: "asc",
+  isFetching: false,
   isFailed: false,
   error: "",
   selectedTags: null,
@@ -29,6 +31,19 @@ export const tagsSlice = createSlice({
   name: "tags",
   initialState,
   reducers: {
+    tagsFetching(state) {
+      state.isFetching = true;
+    },
+    tagsFetchingSuccess(state) {
+      state.isFetching = false;
+      state.isFailed = false;
+      state.error = "";
+    },
+    tagsFetchingError(state, action) {
+      state.isFetching = false;
+      state.isFailed = true;
+      state.error = action.payload;
+    },
     setCurrentEditName(state, action) {
       state.currentEditName = action.payload;
     },

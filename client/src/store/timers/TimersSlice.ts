@@ -3,6 +3,7 @@ import { tagType, timerType } from "../../types/types";
 
 interface ITimersState {
   isFailed: boolean;
+  isFetching: boolean;
   error: string;
   selectDate: number;
   timers: timerType[] | [];
@@ -14,6 +15,7 @@ interface ITimersState {
 }
 
 const initialState: ITimersState = {
+  isFetching: false,
   selectDate: new Date().getTime(),
   selectedTimers: null,
   selectedTags: null,
@@ -29,6 +31,19 @@ export const timersSlice = createSlice({
   name: "timers",
   initialState,
   reducers: {
+    timersFetching(state) {
+      state.isFetching = true;
+    },
+    timersFetchingSuccess(state) {
+      state.isFetching = false;
+      state.isFailed = false;
+      state.error = "";
+    },
+    timersFetchingError(state, action) {
+      state.isFetching = false;
+      state.isFailed = true;
+      state.error = action.payload;
+    },
     setSelectedTimers(state, action) {
       state.selectedTimers = action.payload;
     },

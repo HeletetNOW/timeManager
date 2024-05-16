@@ -8,6 +8,7 @@ import Style from "./RegisterForm.module.css";
 
 import ShowPassword from "../../imgs/showPassword.svg";
 import NoShowPassword from "../../imgs/NoShowPassword.svg";
+import { Loader } from "../../components/Loader/Loader";
 
 type FormValue = {
   email: string;
@@ -18,9 +19,11 @@ type FormValue = {
 };
 
 export const RegisterForm = () => {
+  const [isVisibleLoader, setVisibleLoader] = useState(true);
+
   const navigate = useNavigate();
   const [error, setError] = useState("");
-  const { userInfo } = useAppSelector((state) => state.authReducer);
+  const { userInfo, isFetching } = useAppSelector((state) => state.authReducer);
   const stateError = useAppSelector((state) => state.authReducer.error);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -54,7 +57,13 @@ export const RegisterForm = () => {
     }
   };
 
-  return (
+  return isVisibleLoader ? (
+    <Loader
+      isFetching={isFetching}
+      setVisible={setVisibleLoader}
+      isVisible={isVisibleLoader}
+    />
+  ) : (
     <div className={Style.container}>
       <div className={Style.header}>
         <div className={Style.logo}>logo</div>

@@ -7,6 +7,7 @@ export const getTags =
   (tagName?: string) =>
   async (dispatch: AppDispatch, getSate: () => RootState) => {
     try {
+      dispatch(tagsSlice.actions.tagsFetching());
       const { currentSearchTag, order } = getSate().tagsReducer;
 
       const result = await tagsAPI.getTags(
@@ -15,9 +16,15 @@ export const getTags =
       );
 
       dispatch(tagsSlice.actions.setTags(result.data));
+      dispatch(tagsSlice.actions.tagsFetchingSuccess());
+
       return result.status;
     } catch (error: any) {
       console.log(error.response.data.message);
+      dispatch(
+        tagsSlice.actions.tagsFetchingError(error.response.data.message)
+      );
+
       return error.response.status;
     }
   };

@@ -116,6 +116,7 @@ export const SubProjectList = ({
                           setEditText={setEditText}
                           editTitle={editTitle}
                           editText={editText}
+                          subProjectSumTime={subProject.sumTime}
                           isEdit={
                             currentEditSubProject === subProject.id
                               ? true
